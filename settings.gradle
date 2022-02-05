@@ -1,0 +1,6 @@
+rootProject.name = "AI Beauty Camera"
+include ':app'
+
+
+
+include ':openCVLibrary3415'

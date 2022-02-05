@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.imageProcessing">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center|center_horizontal|center_vertical"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="343dp">
+        <TextView
+            android:id="@+id/chose_function_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Function Type"
+            android:textSize="30sp"
+            android:textColor="#000000"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Button
+            android:id="@+id/Image"
+            android:layout_width="161dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:textSize="30sp"
+            android:text="Image"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/Vedio"
+            android:layout_width="161dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="30sp"
+            android:text="Canmera" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

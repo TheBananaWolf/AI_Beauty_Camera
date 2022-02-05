@@ -1,0 +1,42 @@
+<resources>
+    <string name="Explanation">
+        Press test button will load the default the images for people and background;
+        Press people button to choose the image that contains people;
+        Press background button to choose the background which you like;
+        Press spinner to choose the style;
+        Press run to start the process.
+    </string>
+    <string name="capture">capture</string>
+    <string name="preview_area">preview</string>
+    <string name="compare">compare</string>
+    <string name="pick">pick</string>
+    <string name="app_name">AI Beauty Camera</string>
+    <string name="todo">TODO</string>
+    <string name="lips_beauty">Lips Beauty</string>
+    <string name="save">Save</string>
+    <string name="select_lips_color">Select Lips Color</string>
+    <string name="select_alpha">Select Alpha</string>
+    <string name="open_new_image">Open new image</string>
+    <string name="share">Share</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="camera">Open Camera</string>
+    <string name="settings">Setting</string>
+    <string name="help_feedback"><![CDATA[Help & Feedback]]></string>
+
+    <string-array name="function">
+        <item>Super Piexl</item>
+        <item>FB</item>
+    </string-array>
+
+    <string name="transfer" translatable="false">transfer</string>
+    <string name="function" translatable="false">function</string>
+    <string name="type">type</string>
+    <string name="Preview">Preview</string>
+    <string name="choose_function">Choose Function</string>
+    <string name="material_decorate">Decorate</string>
+    <string name="material_mode">Mode</string>
+    <string name="material_art">Art</string>
+    <string name="material_cover">Cover</string>
+    <string name="material_cute">Cute</string>
+</resources>
