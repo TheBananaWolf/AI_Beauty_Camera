@@ -1,30 +1,20 @@
 package com.example.myapplication.Utills;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.os.AsyncTask;
-import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
-import com.google.mlkit.vision.face.FaceContour;
 import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 import com.google.mlkit.vision.face.FaceLandmark;
-import com.nostra13.universalimageloader.utils.L;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -33,9 +23,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 
@@ -46,9 +34,11 @@ public class ImageProcess {
     private PointF leftCheck;
     private List<PointF> rightcheck;
     private List<PointF> faceCont;
+
     static {
         System.loadLibrary("opencv_java3");
     }
+
     private volatile Semaphore mSemaphore = new Semaphore(0);
 
     private int colordodge(int A, int B) {
@@ -173,6 +163,7 @@ public class ImageProcess {
         }
         return lianhuanhua;
     }
+
     //熔铸滤镜
     public Bitmap Cast(Bitmap photo) {
         Bitmap rongzhu = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888);
@@ -244,23 +235,22 @@ public class ImageProcess {
         return kuosan;
     }
 
-     //big eye
-    public Bitmap BigEye(Bitmap photo){
+    //big eye
+    public Bitmap BigEye(Bitmap photo) {
         Bitmap kuosan = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888);
         mSemaphore.release();
         Bitmap finalPhoto = photo;
         Runnable r1 = new Runnable() {
             public void run() {
                 try {
-                   mSemaphore.acquire();
-                    Log.v("Facemesh","pre");
+                    mSemaphore.acquire();
+                    Log.v("Facemesh", "pre");
                     Facemesh(finalPhoto);
-                    Log.v("Facemesh","mid");
+                    Log.v("Facemesh", "mid");
 
-                    Log.v("Facemesh","aft");
+                    Log.v("Facemesh", "aft");
 
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -271,19 +261,17 @@ public class ImageProcess {
 
         try {
             t1.join();
-            Log.v("leftEyePos","pre");
+            Log.v("leftEyePos", "pre");
             mSemaphore.acquire();
-            Log.v("leftEyePos","mid");
+            Log.v("leftEyePos", "mid");
 
-            if(rightEyePos==null||leftEyePos==null){
-                Log.v("cannot get point","123456");
-                photo=Diffuse(photo);
+            if (rightEyePos == null || leftEyePos == null) {
+                Log.v("cannot get point", "123456");
+                photo = Diffuse(photo);
 
-            }
+            } else {
 
-            else {
-
-               // photo=smallhead(photo, center, 100, 4);
+                // photo=smallhead(photo, center, 100, 4);
                 photo = magnifyEye(photo, rightEyePos, 40, 5);
                 photo = magnifyEye(photo, leftEyePos, 40, 5);
 
@@ -296,8 +284,9 @@ public class ImageProcess {
         }
         return photo;
     }
+
     public void Facemesh(Bitmap bitmap) {
-        Log.v("stage1","face point");
+        Log.v("stage1", "face point");
 
         FaceDetectorOptions options =
                 new FaceDetectorOptions.Builder()
@@ -322,7 +311,7 @@ public class ImageProcess {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        List<Face>temp=result.getResult();
+        List<Face> temp = result.getResult();
         for (Face face : temp) {
             // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
             // nose available):
@@ -337,27 +326,26 @@ public class ImageProcess {
                 rightEyePos = rightEye.getPosition();
             }
 
-            if( nose != null) {
+            if (nose != null) {
                 center = nose.getPosition();
                 Log.v("nose", String.valueOf(nose.getPosition()));
             }
-
-//            faceCont =face.getContour(FaceContour.FACE).getPoints();
-//            Log.v("faceCont size ", String.valueOf(faceCont.size()));
 
         }
         mSemaphore.release();
 
     }
+
     /**
-     *  眼睛放大算法
+     * 眼睛放大算法
+     *
      * @param bitmap      原来的bitmap
      * @param centerPoint 放大中心点
      * @param radius      放大半径
-     * @param sizeLevel    放大力度  [0,4]
+     * @param sizeLevel   放大力度  [0,4]
      * @return 放大眼睛后的图片
      */
-     public  Bitmap magnifyEye(Bitmap bitmap, PointF centerPoint, int radius, float sizeLevel) {
+    public Bitmap magnifyEye(Bitmap bitmap, PointF centerPoint, int radius, float sizeLevel) {
 
         Bitmap dstBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         int left = centerPoint.x - radius < 0 ? 0 : (int) (centerPoint.x - radius);
@@ -405,7 +393,8 @@ public class ImageProcess {
 
         return dstBitmap;
     }
-    public  Bitmap smallhead(Bitmap bitmap, PointF centerPoint, int radius, float sizeLevel) {
+
+    public Bitmap smallhead(Bitmap bitmap, PointF centerPoint, int radius, float sizeLevel) {
 
         Bitmap dstBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         int left = centerPoint.x - radius < 0 ? 0 : (int) (centerPoint.x - radius);
@@ -453,6 +442,7 @@ public class ImageProcess {
 
         return dstBitmap;
     }
+
     private static int checkY(int disY, Bitmap bitmap) {
         if (disY < 0) {
             disY = 0;
@@ -470,6 +460,7 @@ public class ImageProcess {
         }
         return disX;
     }
+
     /**
      * 瘦脸算法
      *
@@ -478,6 +469,7 @@ public class ImageProcess {
      */
     private static final int WIDTH = 200;
     private static final int HEIGHT = 200;
+
     public static Bitmap smallFaceMesh(Bitmap bitmap, List<PointF> faceCont, PointF centerPoint, int level) {
         //交点坐标的个数
         int COUNT = (WIDTH + 1) * (HEIGHT + 1);
@@ -493,27 +485,21 @@ public class ImageProcess {
             for (int j = 0; j < WIDTH + 1; j++) {
                 float fx = bmWidth * j / WIDTH;
                 //X轴坐标 放在偶数位
-                org[index*2]=verts[index * 2] = fx;
+                org[index * 2] = verts[index * 2] = fx;
                 //Y轴坐标 放在奇数位
-                org[index*2+1]=verts[index * 2 + 1] = fy;
+                org[index * 2 + 1] = verts[index * 2 + 1] = fy;
                 index += 1;
             }
         }
         int r = 180 + 15 * level;
 
-        warp(verts,faceCont.get(21).x,faceCont.get(21).y,centerPoint.x,centerPoint.y,r);
-        for(int i=0;i<COUNT*2;i++){
-            if(org[i]!=verts[i]){
+        warp(verts, faceCont.get(21).x, faceCont.get(21).y, centerPoint.x, centerPoint.y, r);
+        for (int i = 0; i < COUNT * 2; i++) {
+            if (org[i] != verts[i]) {
                 Log.v("org different verts", String.valueOf(i));
             }
         }
-//        warp(verts,faceCont.get(27).x,faceCont.get(27).y,centerPoint.x,centerPoint.y,r);
-//
-//        warp(verts,faceCont.get(15).x,faceCont.get(15).y,centerPoint.x,centerPoint.y,r);
-//        warp(verts,faceCont.get(8).x,faceCont.get(8).y,centerPoint.x,centerPoint.y,r);
-
-
-        Bitmap resultBitmap = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap resultBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(resultBitmap);
         Paint paint = new Paint();
         paint.setAntiAlias(true);       //testing parameters
@@ -521,34 +507,26 @@ public class ImageProcess {
 
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawBitmapMesh(bitmap,WIDTH, HEIGHT,verts,0,null,0,paint);
+        canvas.drawBitmapMesh(bitmap, WIDTH, HEIGHT, verts, 0, null, 0, paint);
         //canvas.drawBitmap(bitmap,0,0,null);
-        Log.v("smallFaceMesh","done");
+        Log.v("smallFaceMesh", "done");
         return resultBitmap;
     }
-    private static void warp(float verts[],float startX, float startY, float endX, float endY,int r) {
-        //level [0,4]
 
-        //int r = 200; default 200
-
+    private static void warp(float verts[], float startX, float startY, float endX, float endY, int r) {
         //计算拖动距离
         float ddPull = (endX - startX) * (endX - startX) + (endY - startY) * (endY - startY);
         float dPull = (float) Math.sqrt(ddPull);
-        //Log.v("Pull_dis", String.valueOf(dPull));
-        //dPull = screenWidth - dPull >= 0.0001f ? screenWidth - dPull : 0.0001f;
-        if(dPull < 2 * r){
+        if (dPull < 2 * r) {
             dPull = 2 * r;
         }
-        //Log.v("Pull_dis", String.valueOf(dPull));
         int powR = r * r;
         int index = 0;
         int offset = 1;
         for (int i = 0; i < HEIGHT + 1; i++) {
             for (int j = 0; j < WIDTH + 1; j++) {
                 //边界区域不处理
-                if(i < offset || i > HEIGHT - offset || j < offset || j > WIDTH - offset){
-                    //Log.v("itom", String.valueOf(i)+" "+String.valueOf(j));
-
+                if (i < offset || i > HEIGHT - offset || j < offset || j > WIDTH - offset) {
                     index = index + 1;
                     continue;
                 }
@@ -556,11 +534,9 @@ public class ImageProcess {
                 float dx = verts[index * 2] - startX;
                 float dy = verts[index * 2 + 1] - startY;
                 float dd = dx * dx + dy * dy;
-                //Log.v("determine", String.valueOf((dd < powR)));
                 if (dd < powR) {
                     //变形系数，扭曲度
                     double e = (powR - dd) * (powR - dd) / ((powR - dd + dPull * dPull) * (powR - dd + dPull * dPull));
-                    //Log.v("etom",String.valueOf(e));
                     double pullX = e * (endX - startX);
                     double pullY = e * (endY - startY);
                     verts[index * 2] = (float) (verts[index * 2] + pullX);
@@ -570,7 +546,6 @@ public class ImageProcess {
             }
         }
     }
-
 
 
 }

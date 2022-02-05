@@ -12,7 +12,7 @@ import android.util.Log;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
-import org.tensorflow.lite.gpu.GpuDelegate;
+import org.tensorflow.lite.nnapi.NnApiDelegate;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import org.tensorflow.lite.nnapi.NnApiDelegate;
 
 public class SRGanModel {
     private static final String TAG = "FANG";
@@ -78,7 +77,7 @@ public class SRGanModel {
             ret = true;
             Log.v("tfLite", String.valueOf(tfLite));
         } catch (IOException e) {
-            Log.v("WANGGUANJIE","QQ");
+            Log.v("WANGGUANJIE", "QQ");
             e.printStackTrace();
         }
 
@@ -93,8 +92,8 @@ public class SRGanModel {
     private void setInputOutputDetails(Bitmap bitmap) {
         // 获取模型输入数据格式
         Log.e(TAG, "imageDataType:" + bitmap);
-        if(tfLite==null){
-            Log.v("wangguanjie","w");
+        if (tfLite == null) {
+            Log.v("wangguanjie", "w");
         }
         DataType imageDataType = tfLite.getInputTensor(0).dataType();
 
@@ -133,31 +132,6 @@ public class SRGanModel {
      * @return
      */
     public Bitmap inference(Bitmap bitmap) {
-        /////////////////////////////////////////////////////////
-//        // 直接对图片进行SR运算，当输入图片比较大的时候，APP就会被系统强制退出了
-//        // 根据原图的小块图片设置模型输入
-//        setInputOutputDetails(bitmap);
-//        // 执行模型的推理，得到小块图片sr后的高清图片
-//        tfLite.run(inputImageBuffer.getBuffer(), outputProbabilityBuffer.getBuffer());
-//        // 将高清图片数据从TensorBuffer转成float[]，以转成安卓常用的Bitmap类型
-//        float[] results = outputProbabilityBuffer.getFloatArray();
-//        // 将图片从float[]转成Bitmap
-//        Bitmap b = floatArrayToBitmap(results, bitmap.getWidth() * scale, bitmap.getHeight() * scale);
-//        ///////////////////////////////////////////////////////
-//        // 验证拆分和合并图片的代码
-//        ArrayList<SplitBitmap> splitedBitmaps = splitBitmap(bitmap);
-//        ArrayList<SplitBitmap> mergeBitmaps = new ArrayList<SplitBitmap>();
-//        for (SplitBitmap sb : splitedBitmaps) {
-//            SplitBitmap srsb = new SplitBitmap();
-//            srsb.column = sb.column;
-//            srsb.row = sb.row;
-//            srsb.bitmap = sb.bitmap;
-//            mergeBitmaps.add(srsb);
-//        }
-//        // 最后，将列表中的小块图片合并成一张大的图片并返回
-//        Bitmap mergeBitmap = mergeBitmap(mergeBitmaps);
-        /////////////////////////////////////////////////////////
-        // 对所有原图的小块图片进行sr运算，并把得到的小块高清图存到sredBitmaps列表中
         ArrayList<SplitBitmap> splitedBitmaps = splitBitmap(bitmap);  //将原图切分成众多小块图片, 返回位图列表
         ArrayList<SplitBitmap> mergeBitmaps = new ArrayList<SplitBitmap>();
         float progress = 0;
@@ -187,7 +161,9 @@ public class SRGanModel {
         return mergeBitmap;
     }
 
-    /** Memory-map the model file in Assets. */
+    /**
+     * Memory-map the model file in Assets.
+     */
     private MappedByteBuffer loadModelFile(AssetManager assets, String modelFilename)
             throws IOException {
         AssetFileDescriptor fileDescriptor = assets.openFd(modelFilename);
@@ -205,12 +181,11 @@ public class SRGanModel {
      */
     private int floatToInt(float data) {
         int tmp = Math.round(data);
-        if (tmp < 0){
+        if (tmp < 0) {
             tmp = 0;
-        }else if (tmp > 255) {
+        } else if (tmp > 255) {
             tmp = 255;
         }
-//        Log.e(TAG, tmp + " " + data);
         return tmp;
     }
 
@@ -222,7 +197,7 @@ public class SRGanModel {
      * @return 返回图片的位图
      */
     private Bitmap floatArrayToBitmap(float[] data, int width, int height) {
-        int [] intdata = new int[width * height];
+        int[] intdata = new int[width * height];
         // 因为我们用的Bitmap是ARGB的格式，而data是RGB的格式，所以要经过转换，A指的是透明度
         for (int i = 0; i < width * height; i++) {
             int R = floatToInt(data[3 * i]);
@@ -230,8 +205,6 @@ public class SRGanModel {
             int B = floatToInt(data[3 * i + 2]);
 
             intdata[i] = (0xff << 24) | (R << 16) | (G << 8) | (B << 0);
-
-//            Log.e(TAG, intdata[i]+"");
         }
         //得到位图
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -242,7 +215,7 @@ public class SRGanModel {
     /***
      * 这个类用来存放切分后的小块图片的信息
      */
-    private class SplitBitmap{
+    private class SplitBitmap {
         public int row; // 当前小块图片相对原图处于哪一行
         public int column; // 当前小块图片相对原图处于哪一列
         public Bitmap bitmap; // 当前小块图片的位图
@@ -258,10 +231,10 @@ public class SRGanModel {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         // 原图宽高除以cropBitmapSize，得到应该将图片的宽和高分成几部分
-        float splitFW = (float)width / cropBitmapSize;
-        float splitFH = (float)height / cropBitmapSize;
-        int splitW = (int)(splitFW);
-        int splitH = (int)(splitFH);
+        float splitFW = (float) width / cropBitmapSize;
+        float splitFH = (float) height / cropBitmapSize;
+        int splitW = (int) (splitFW);
+        int splitH = (int) (splitFH);
         // 用来存放切割以后的小块图片的信息
         ArrayList<SplitBitmap> splitedBitmaps = new ArrayList<SplitBitmap>();
         Log.e(TAG, "width:" + width + " height:" + height);
@@ -284,7 +257,7 @@ public class SRGanModel {
                 sb.column = 0;
                 if (i == splitH - 1) {
                     sb.bitmap = Bitmap.createBitmap(bitmap, 0, i * cropBitmapSize, cropBitmapSize, height - i * cropBitmapSize, null, false);
-                }else {
+                } else {
                     sb.bitmap = Bitmap.createBitmap(bitmap, 0, i * cropBitmapSize, cropBitmapSize, cropBitmapSize, null, false);
                 }
                 splitedBitmaps.add(sb);
@@ -297,7 +270,7 @@ public class SRGanModel {
                 sb.column = i;
                 if (i == splitW - 1) {
                     sb.bitmap = Bitmap.createBitmap(bitmap, i * cropBitmapSize, 0, cropBitmapSize, width - i * cropBitmapSize, null, false);
-                }else {
+                } else {
                     sb.bitmap = Bitmap.createBitmap(bitmap, i * cropBitmapSize, 0, cropBitmapSize, cropBitmapSize, null, false);
                 }
 
@@ -312,18 +285,11 @@ public class SRGanModel {
                     // 最后一行的高度
                     if (i == splitH - 1) {
                         lastH = height - i * cropBitmapSize;
-//                        Log.e(TAG, "lastH:" +lastH);
                     }
                     // 最后一列的宽度
                     if (j == splitW - 1) {
                         lastW = width - j * cropBitmapSize;
-//                        Log.e(TAG, "lastW:" +lastW);
                     }
-//                    Log.e(TAG, "lastH:" + lastH + " lastW:" + lastW +
-//                            " bitmapH:" + bitmap.getHeight() + " bitmapW:" + bitmap.getWidth() +
-//                            " i * cropBitmapSize:" + i * cropBitmapSize + " j * cropBitmapSize:" + j * cropBitmapSize +
-//                            " i:" + i + " j:" + j
-//                    );
 
                     SplitBitmap sb = new SplitBitmap();
                     // 记录当前小块图片所处的行列
@@ -349,7 +315,6 @@ public class SRGanModel {
         int mergeBitmapHeight = 0;
         // 遍历位图列表，根据行和列的信息，计算出合并后的位图的宽高
         for (SplitBitmap sb : splitedBitmaps) {
-//            Log.e(TAG, "sb.column:" + sb.column + " sb.row:" + sb.row + " sb.bitmap.getHeight():" + sb.bitmap.getHeight() + " sb.bitmap.getWidth():" + sb.bitmap.getWidth());
             if (sb.row == 0) {
                 mergeBitmapWidth += sb.bitmap.getWidth();
             }
@@ -394,7 +359,7 @@ public class SRGanModel {
             //最后一行
             // 根据对比上一行中的高度来计算当前行是否最后一行，因为最后一行前的所有行的高度都是一致的
             if (i != 0 && i < splitedBitmapsSize && lastColumn0SB != null && splitedBitmaps.get(i).bitmap.getHeight() != lastColumn0SB.bitmap.getHeight()) {
-//                Log.e(TAG, "---------------");
+
                 // 如果最后一行的高度和之前行的高度不一致，那么就要根据上一行中的高度来重新计算当前行的起始位置
                 SplitBitmap lastColumnBitmap = lastColumn0SB;
                 left = sb.column * lastColumnBitmap.bitmap.getWidth();
@@ -413,8 +378,6 @@ public class SRGanModel {
             // 将当前小块画到大图中
             canvas.drawBitmap(sb.bitmap, srcRect, destRect, null);
             // 这个是为了调试而画的框
-//            canvas.drawRect(destRect, boxPaint);
-//            Log.e(TAG,"I:" + i + " col:" + sb.column + " row:" + sb.row + " width:" + sb.bitmap.getWidth() + " height:" + sb.bitmap.getHeight());
         }
 
         return mBitmap;

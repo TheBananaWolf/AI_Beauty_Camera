@@ -29,15 +29,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.example.myapplication.Model.CocoModel;
-import com.example.myapplication.Model.SRGanModel;
 import com.example.myapplication.Adapter.AdapterForRecycle;
 import com.example.myapplication.Adapter.RecyclerTouchListener;
+import com.example.myapplication.Model.CocoModel;
+import com.example.myapplication.Model.SRGanModel;
 import com.example.myapplication.R;
 import com.example.myapplication.Utills.ListForRecyclerViewForImage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,7 +76,7 @@ public class imageProcessing extends AppCompatActivity {
         activity = this;
         srGanModel = new SRGanModel(activity);
         CocoModel = new CocoModel(activity);
-        SmallFaceActivity=new SmallFaceActivity();
+        SmallFaceActivity = new SmallFaceActivity();
 
         srGanModel.loadModel(SRGAN_MODEL_FILE);
         try {
@@ -92,13 +90,12 @@ public class imageProcessing extends AppCompatActivity {
         handler = new Handler(handlerThread.getLooper());
 
 
-
         imageViewSrc = findViewById(R.id.imageview_src);
         imageViewDest = findViewById(R.id.imageview_dest);
         imageViewSrc.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageViewDest.setScaleType(ImageView.ScaleType.FIT_CENTER);
         progressBar = findViewById(R.id.progressBar);
-        background=findViewById(R.id.ChooseBackground);
+        background = findViewById(R.id.ChooseBackground);
 
         srGanModel.addSRProgressCallback(new SRGanModel.SRProgressCallback() {
             @Override
@@ -125,7 +122,7 @@ public class imageProcessing extends AppCompatActivity {
 
             }
         });
-        background=findViewById(R.id.ChooseBackground);
+        background = findViewById(R.id.ChooseBackground);
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,14 +132,14 @@ public class imageProcessing extends AppCompatActivity {
                 startActivityForResult(intent, 2);
             }
         });
-        save=findViewById(R.id.Save);
-        save.setOnClickListener(new View.OnClickListener(){
+        save = findViewById(R.id.Save);
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (merged != null) {
                     String text = "Save failed!";
-                    if (com.example.myapplication.Utills.SaveImageFile.saveBitmap(merged,SR_ROOT)){
-                        text = "Save success!"+" the saving path is "+SR_ROOT;
+                    if (com.example.myapplication.Utills.SaveImageFile.saveBitmap(merged, SR_ROOT)) {
+                        text = "Save success!" + " the saving path is " + SR_ROOT;
                     }
                     Toast toast = Toast.makeText(
                             getApplicationContext(), text, Toast.LENGTH_SHORT);
@@ -167,8 +164,8 @@ public class imageProcessing extends AppCompatActivity {
                 if (progressBar.getProgress() == 100) {
                     progressBar.setProgress(0);
                 }
-                if(image==null){
-                    Toast.makeText(imageProcessing.this,"Choose the input image first !!!!!",Toast.LENGTH_SHORT).show();
+                if (image == null) {
+                    Toast.makeText(imageProcessing.this, "Choose the input image first !!!!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -244,8 +241,7 @@ public class imageProcessing extends AppCompatActivity {
                         }
                     });
 
-                }
-                else if (listForRecyclerViewForImage.getName().equals("Cutout")) {
+                } else if (listForRecyclerViewForImage.getName().equals("Cutout")) {
                     runInBackground(new Runnable() {
                         @Override
                         public void run() {
@@ -264,8 +260,7 @@ public class imageProcessing extends AppCompatActivity {
                         }
                     });
 
-                }
-                else if (listForRecyclerViewForImage.getName().equals("Contour")) {
+                } else if (listForRecyclerViewForImage.getName().equals("Contour")) {
                     runInBackground(new Runnable() {
                         @Override
                         public void run() {
@@ -319,16 +314,13 @@ public class imageProcessing extends AppCompatActivity {
                                     });
                         }
                     });
-                }
-                else if (listForRecyclerViewForImage.getName().equals("FaceBeauty")) {
-                    Intent temp=new Intent(imageProcessing.this, DesignActivity.class);
+                } else if (listForRecyclerViewForImage.getName().equals("FaceBeauty")) {
+                    Intent temp = new Intent(imageProcessing.this, DesignActivity.class);
                     temp.putExtra("imageUri", imagePath);
                     Log.e("wangguanjie", imagePath);
-                    temp.putExtra("opt","");
+                    temp.putExtra("opt", "");
                     startActivity(temp);
-                }
-
-                else if (listForRecyclerViewForImage.getName().equals("Diffuse")) {
+                } else if (listForRecyclerViewForImage.getName().equals("Diffuse")) {
                     runInBackground(new Runnable() {
                         @Override
                         public void run() {
@@ -400,9 +392,8 @@ public class imageProcessing extends AppCompatActivity {
                                     });
                         }
                     });
-                }
-                else if (listForRecyclerViewForImage.getName().equals("Pinch_face")) {
-                    Intent temp=new Intent(imageProcessing.this, SmallFaceActivity.class);
+                } else if (listForRecyclerViewForImage.getName().equals("Pinch_face")) {
+                    Intent temp = new Intent(imageProcessing.this, SmallFaceActivity.class);
 
                     temp.putExtra("imageUri", imagePath);
                     Log.e("wangguanjie", imagePath);
@@ -410,9 +401,7 @@ public class imageProcessing extends AppCompatActivity {
                     startActivity(temp);
 
 
-
-                }
-                else if (listForRecyclerViewForImage.getName().equals("BigEye")) {
+                } else if (listForRecyclerViewForImage.getName().equals("BigEye")) {
                     runInBackground(new Runnable() {
                         @Override
                         public void run() {
@@ -430,10 +419,9 @@ public class imageProcessing extends AppCompatActivity {
                                     });
                         }
                     });
-                }
-                else if (listForRecyclerViewForImage.getName().equals("Stiker")) {
+                } else if (listForRecyclerViewForImage.getName().equals("Stiker")) {
 
-                    Intent temp =new Intent(imageProcessing.this,MainActivityForSticker.class);
+                    Intent temp = new Intent(imageProcessing.this, MainActivityForSticker.class);
 
                     startActivity(temp);
                 }
@@ -449,7 +437,7 @@ public class imageProcessing extends AppCompatActivity {
 
     }
 
-    public static Bitmap getSRC(){
+    public static Bitmap getSRC() {
         return image;
     }
 
@@ -504,7 +492,7 @@ public class imageProcessing extends AppCompatActivity {
                 //Display an error
                 return;
             }
-            path=data.getData();
+            path = data.getData();
             image = rotateImage1(data);
 
         }

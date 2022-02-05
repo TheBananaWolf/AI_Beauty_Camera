@@ -2,7 +2,6 @@ package com.example.myapplication.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,12 +22,10 @@ import androidx.camera.extensions.HdrImageCaptureExtender;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.myapplication.R;
-import com.example.myapplication.Utills.PermissionUtils;
 import com.example.myapplication.Utills.SaveImageFile;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -41,7 +38,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class MainActivityForFaceBeauty extends AppCompatActivity{
+public class MainActivityForFaceBeauty extends AppCompatActivity {
     private static int lensFacing = CameraSelector.LENS_FACING_BACK;
     private CardView captureBtn, pickImageBtn, swipCamera;
     private PreviewView cameraPreviewView;
@@ -141,8 +138,8 @@ public class MainActivityForFaceBeauty extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                Log.v("yhl click:","captureBtn");
-                if(lensFacing == CameraSelector.LENS_FACING_FRONT){
+                Log.v("yhl click:", "captureBtn");
+                if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
                     opt = "captureBtn-opt-front";
                 }
                 if (lensFacing == CameraSelector.LENS_FACING_BACK) {
@@ -162,12 +159,11 @@ public class MainActivityForFaceBeauty extends AppCompatActivity{
                             public void run() {
                                 Intent intent = new Intent(MainActivityForFaceBeauty.this, ImagePreviewActivity.class);
                                 intent.putExtra("imageUrl", file.getPath());
-                                intent.putExtra("opt",opt);
+                                intent.putExtra("opt", opt);
                                 startActivity(intent);
                             }
 
                         });
-                        //Toast.makeText(MainActivity.this, "Photo Capture Succeeded: "+ outputFileResults, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -193,7 +189,7 @@ public class MainActivityForFaceBeauty extends AppCompatActivity{
                     Intent intent = new Intent(MainActivityForFaceBeauty.this, DesignActivity.class);
                     intent.putExtra("imageUri", imageUri.toString());
                     opt = "pickImageBtn";
-                    Log.v("onActivityResult",imageUri.toString());
+                    Log.v("onActivityResult", imageUri.toString());
                     intent.putExtra("opt", opt);
 
                     startActivity(intent);
@@ -232,7 +228,6 @@ public class MainActivityForFaceBeauty extends AppCompatActivity{
         });
         builder.show();
     }
-
 
 
 }

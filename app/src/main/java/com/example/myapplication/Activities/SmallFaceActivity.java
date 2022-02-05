@@ -100,9 +100,7 @@ public class SmallFaceActivity extends AppCompatActivity {
         loadImage();
     }
 
-
     private void loadImage() {
-
         showPreview.setVisibility(isShowCompare ? View.VISIBLE : View.GONE);
         smallFaceView.setVisibility(!isShowCompare ? View.VISIBLE : View.GONE);
 
@@ -110,55 +108,7 @@ public class SmallFaceActivity extends AppCompatActivity {
             img.setImageBitmap(inputImage);
             imgResult.setImageBitmap(smallFaceView.getBitmap());
         }
-
-
-//        img.setImageBitmap(CommonShareBitmap.originBitmap);
-//
-//        String faceJson = FacePoint.getFaceJson(this,"face_point1.json");
-//
-//        Bitmap bitmap = SmallFaceUtils.smallFaceMesh(CommonShareBitmap.originBitmap,
-//                FacePoint.getLeftFacePoint(faceJson),
-//                FacePoint.getRightFacePoint(faceJson),
-//                FacePoint.getCenterPoint(faceJson), 5);
-//
-//
-//        imgResult.setImageBitmap(bitmap);
-
     }
-
-    /*
-    public void pickHumanImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(intent, PICK_PHOTO_FOR_AVATAR);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return;
-            }
-
-//                InputStream inputStream = null;
-//                ContextWrapper context = this;
-//                try {
-//                    inputStream = context.getContentResolver().openInputStream(data.getData());
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-
-
-
-        }
-    }
-
-     */
 
 
     @SuppressLint("LongLogTag")
@@ -176,12 +126,8 @@ public class SmallFaceActivity extends AppCompatActivity {
         imagePath = cursor.getString(columnIndex);
         Log.v("image path: ", imagePath);
         cursor.close();
-
         try {
-
-
             ExifInterface exif = new ExifInterface(imagePath);
-
             int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             int rotationInDegrees = exifToDegrees(rotation);
             Log.v("Picture rotationInDegrees", String.valueOf(rotationInDegrees));
@@ -196,7 +142,6 @@ public class SmallFaceActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return result;
     }
 

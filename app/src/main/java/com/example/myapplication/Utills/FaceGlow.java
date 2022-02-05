@@ -132,33 +132,3 @@ public class FaceGlow {
         return result;
     }
 }
-//draw
-/*
-* // Top-left
-x = 0;
-y = 0;
-// Top-centre
-x = mainBitmap.getWidth() / 2 - (watermarkBitmap.getWidth() / 2);;
-y = 0;
-// Top-right
-x =  mainBitmap.getWidth() - watermarkBitmap.getWidth());
-y = 0;
-// Centre-reft
-x = 0;
-y = position = mainBitmap.getHeight() / 2 - (watermarkBitmap.getHeight() / 2);
-// Dead centre
-x = mainBitmap.getWidth() / 2 - (watermarkBitmap.getWidth() / 2);
-y =  position = mainBitmap.getHeight() / 2 - (watermarkBitmap.getHeight() / 2);
-// Centre-right
-x = mainBitmap.getWidth() - watermarkBitmap.getWidth();
-y = position = mainBitmap.getHeight() / 2 - (watermarkBitmap.getHeight() / 2);
-// Bottom-left
-x = 0;
-y = mainBitmap.getHeight() - watermarkBitmap.getHeight();
-// Bottom-centre
-x = mainBitmap.getWidth() / 2 - (watermarkBitmap.getWidth() / 2);
-y = mainBitmap.getHeight() - watermarkBitmap.getHeight();
-// Bottom-right
-x = mainBitmap.getWidth() - watermarkBitmap.getWidth();
-y = mainBitmap.getHeight() - watermarkBitmap.getHeight();
-* */

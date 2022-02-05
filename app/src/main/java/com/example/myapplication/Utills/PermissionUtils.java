@@ -1,13 +1,11 @@
 package com.example.myapplication.Utills;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 
 import androidx.core.app.ActivityCompat;
 
 public class PermissionUtils {
-    public static final int PERMISSION_REQUEST_CODE = 100;
     private static final String[] PERMISSIONS_STORAGE = {
             "android.permission.CAMERA",
             "android.permission.READ_EXTERNAL_STORAGE",

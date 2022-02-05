@@ -1,9 +1,7 @@
 package com.example.myapplication.Activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,18 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.Model.ObjectDetection;
 import com.example.myapplication.R;
 import com.example.myapplication.Utills.PhotoUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivityForObject extends AppCompatActivity {
 
@@ -38,11 +30,8 @@ public class MainActivityForObject extends AppCompatActivity {
     private ImageView show_image;
     private TextView result_text;
     private boolean load_result = false;
-
-    //先定义
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-
     ObjectDetection test = new ObjectDetection();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +61,7 @@ public class MainActivityForObject extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         String image_path;
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {

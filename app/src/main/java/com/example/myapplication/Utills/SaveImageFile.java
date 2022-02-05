@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,10 +26,8 @@ public class SaveImageFile {
 
     public String getBatchDirectoryName() {
         String app_folder_path = "";
-        Log.v("yhl SaveImage:", "dir test");
         app_folder_path = Environment.getExternalStorageDirectory().toString() + DCIM + getAppName() + CAPTURE;
         File dir = new File(app_folder_path);
-        Log.v("yhl dir:", String.valueOf(dir));
         if (!dir.exists() && !dir.mkdirs()) {
 
         }
@@ -58,29 +55,7 @@ public class SaveImageFile {
             fullPath = root + "/DCIM/" + getAppName() + "/" + fname;
             Snackbar.make(rootLayout, "Saved Image in " + fullPath, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                final Uri contentUri = Uri.parse(fullPath);
-//                scanIntent.setData(contentUri);
-//                context.sendBroadcast(scanIntent);
-//            } else {
-//                final Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + fullPath));
-//                context.sendBroadcast(intent);
-//            }
-            //            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-//                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-            /* new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(ACTION_VIEW);
-                            Uri uri = Uri.parse("file://" + fullPath);
-                            intent.setDataAndType(uri, "image/*");
-                            context.startActivity(intent);
-                        }
-            * */
-
         } catch (Exception e) {
-            Log.d("EXEX",e.getMessage());
             Snackbar.make(rootLayout, "Can't Save Image" + fullPath, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
@@ -97,16 +72,15 @@ public class SaveImageFile {
         }
         return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
     }
-    public static boolean saveBitmap(Bitmap bitmap,String path) {
+
+    public static boolean saveBitmap(Bitmap bitmap, String path) {
         boolean ret = false;
         final File rootDir = new File(path);
-        if (!rootDir.exists()){
+        if (!rootDir.exists()) {
             if (!rootDir.mkdirs()) {
-                Log.e("TomWang", path);
+
             }
         }
-
-
         String filename = path + SystemClock.uptimeMillis() + ".png";
         try {
             final FileOutputStream out = new FileOutputStream(filename);
@@ -115,7 +89,6 @@ public class SaveImageFile {
             out.close();
             ret = true;
         } catch (final Exception e) {
-            Log.e("TomWang",  "Exception!");
         }
         return ret;
     }

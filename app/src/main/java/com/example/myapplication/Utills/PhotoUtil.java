@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.core.content.FileProvider;
 
@@ -24,7 +23,6 @@ public class PhotoUtil {
         // save image in cache path
         File outputImage = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
                 + "/lite_mobile/", System.currentTimeMillis() + ".jpg");
-        Log.d("outputImage", outputImage.getAbsolutePath());
         try {
             if (outputImage.exists()) {
                 outputImage.delete();
@@ -37,7 +35,6 @@ public class PhotoUtil {
 
             outputImage.createNewFile();
         } catch (IOException e) {
-            Log.e("q",e.toString());
             e.printStackTrace();
         }
         if (Build.VERSION.SDK_INT >= 24) {
@@ -50,7 +47,7 @@ public class PhotoUtil {
         // set system camera Action
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION );
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         // set save photo path
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         // set photo quality, min is 0, max is 1

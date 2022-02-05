@@ -10,36 +10,39 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Utills.ListForRecyclerViewForImage;
 import com.example.myapplication.R;
+import com.example.myapplication.Utills.ListForRecyclerViewForImage;
 
 import java.util.List;
 
 public class AdapterForRecycle extends RecyclerView.Adapter<AdapterForRecycle.ViewHolder> {
     private List<ListForRecyclerViewForImage> mFruitlis;
-    static class ViewHolder extends RecyclerView.ViewHolder{
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView fruitImage;
         TextView fruitName;
-        public ViewHolder (View view){
+
+        public ViewHolder(View view) {
             super(view);
-            fruitImage=view.findViewById(R.id.fruit_image);
-            fruitName=view.findViewById(R.id.fruit_name);
+            fruitImage = view.findViewById(R.id.fruit_image);
+            fruitName = view.findViewById(R.id.fruit_name);
         }
     }
-    public AdapterForRecycle(List<ListForRecyclerViewForImage> listForRecyclerViewForImageList){
-         mFruitlis= listForRecyclerViewForImageList;
+
+    public AdapterForRecycle(List<ListForRecyclerViewForImage> listForRecyclerViewForImageList) {
+        mFruitlis = listForRecyclerViewForImageList;
     }
 
     @Override
     public AdapterForRecycle.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.fruit,parent,false);
-        ViewHolder holder=new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fruit, parent, false);
+        ViewHolder holder = new ViewHolder(view);
         holder.fruitImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position=holder.getAdapterPosition();
-                ListForRecyclerViewForImage listForRecyclerViewForImage =mFruitlis.get(position);
-                Toast.makeText(v.getContext(),String.valueOf(listForRecyclerViewForImage.getName()),Toast.LENGTH_SHORT).show();
+                int position = holder.getAdapterPosition();
+                ListForRecyclerViewForImage listForRecyclerViewForImage = mFruitlis.get(position);
+                Toast.makeText(v.getContext(), String.valueOf(listForRecyclerViewForImage.getName()), Toast.LENGTH_SHORT).show();
             }
         });
         return holder;
@@ -47,14 +50,11 @@ public class AdapterForRecycle extends RecyclerView.Adapter<AdapterForRecycle.Vi
 
     @Override
     public void onBindViewHolder(@NonNull AdapterForRecycle.ViewHolder holder, int position) {
-        ListForRecyclerViewForImage listForRecyclerViewForImage =mFruitlis.get(position);
+        ListForRecyclerViewForImage listForRecyclerViewForImage = mFruitlis.get(position);
         holder.fruitImage.setImageResource(listForRecyclerViewForImage.getImageID());
         holder.fruitName.setText(listForRecyclerViewForImage.getName());
 
     }
-
-
-
 
     @Override
     public int getItemCount() {

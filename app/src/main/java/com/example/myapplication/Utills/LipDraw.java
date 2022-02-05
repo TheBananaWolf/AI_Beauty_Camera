@@ -106,17 +106,9 @@ public class LipDraw {
                 mainPath.lineTo(px, py);
             }
             LipDraw.drawLipPerfect(canvas, mainPath, color, alpha);
-
-//            newTempBitmap = tempBitmap;
-//            imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return tempBitmap;
     }
 }
-//        for draw line
-//        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//        paint.setColor(Color.RED);
-//        paint.setStyle(Paint.Style.STROKE);
-//        paint.setStrokeWidth(15.0f);

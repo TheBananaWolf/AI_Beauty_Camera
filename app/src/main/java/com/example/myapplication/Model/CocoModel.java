@@ -51,19 +51,22 @@ public class CocoModel {
     private CocoModel.ProgressCallback callback;
 
 
-
     public CocoModel(Activity activity) {
         this.activity = activity;
-        imageProcess =new ImageProcess();
-    }
-    public void setOpenCVFunctionName(String s){
-        this.OpenCVFunctionName=s;
-    }
-    public void setBackgroud(Bitmap b){
-        this.backgroud=b;
+        imageProcess = new ImageProcess();
     }
 
-    /** Memory-map the model file in Assets. */
+    public void setOpenCVFunctionName(String s) {
+        this.OpenCVFunctionName = s;
+    }
+
+    public void setBackgroud(Bitmap b) {
+        this.backgroud = b;
+    }
+
+    /**
+     * Memory-map the model file in Assets.
+     */
     private MappedByteBuffer loadModelFile(AssetManager assets, String modelFilename)
             throws IOException {
         AssetFileDescriptor fileDescriptor = assets.openFd(modelFilename);
@@ -93,51 +96,47 @@ public class CocoModel {
                 mSegmentColors[i] = Color.TRANSPARENT;
             } else {
                 mSegmentColors[i] = Color.rgb(
-                        (int)(255 * RANDOM.nextFloat()),
-                        (int)(255 * RANDOM.nextFloat()),
-                        (int)(255 * RANDOM.nextFloat()));
+                        (int) (255 * RANDOM.nextFloat()),
+                        (int) (255 * RANDOM.nextFloat()),
+                        (int) (255 * RANDOM.nextFloat()));
             }
         }
     }
+
     @SuppressLint("LongLogTag")
     public Bitmap segment(Bitmap bitmap) {
-        Bitmap OpenCV=null;
-        if(OpenCVFunctionName.equals("Gray"))
-            OpenCV=imageProcess.Gray(bitmap);
-        else if(OpenCVFunctionName.equals("Nostalgic"))
-            OpenCV=imageProcess.Nostalgic(bitmap);
-        else if(OpenCVFunctionName.equals("Comic_strip"))
-            OpenCV=imageProcess.Comic_strip(bitmap);
-        else if(OpenCVFunctionName.equals("Diffuse"))
-            OpenCV=imageProcess.Diffuse(bitmap);
-        else if(OpenCVFunctionName.equals("BigEye"))
-            OpenCV=imageProcess.BigEye(bitmap);
-        else if(OpenCVFunctionName.equals("Binarization")) {
+        Bitmap OpenCV = null;
+        if (OpenCVFunctionName.equals("Gray"))
+            OpenCV = imageProcess.Gray(bitmap);
+        else if (OpenCVFunctionName.equals("Nostalgic"))
+            OpenCV = imageProcess.Nostalgic(bitmap);
+        else if (OpenCVFunctionName.equals("Comic_strip"))
+            OpenCV = imageProcess.Comic_strip(bitmap);
+        else if (OpenCVFunctionName.equals("Diffuse"))
+            OpenCV = imageProcess.Diffuse(bitmap);
+        else if (OpenCVFunctionName.equals("BigEye"))
+            OpenCV = imageProcess.BigEye(bitmap);
+        else if (OpenCVFunctionName.equals("Binarization")) {
             OpenCV = imageProcess.Binarization(bitmap);
             callback.callback(100);
             return OpenCV;
-        }
-        else if(OpenCVFunctionName.equals("Sketch")) {
+        } else if (OpenCVFunctionName.equals("Sketch")) {
             OpenCV = imageProcess.Sketch(bitmap);
             callback.callback(100);
             return OpenCV;
-        }
-        else if(OpenCVFunctionName.equals("Contour")) {
+        } else if (OpenCVFunctionName.equals("Contour")) {
             OpenCV = imageProcess.Contour(bitmap);
             callback.callback(100);
             return OpenCV;
-        }
-        else if(OpenCVFunctionName.equals("Cast")) {
+        } else if (OpenCVFunctionName.equals("Cast")) {
             OpenCV = imageProcess.Cast(bitmap);
             callback.callback(100);
             return OpenCV;
-        }
-        else if(OpenCVFunctionName.equals("Iced")) {
+        } else if (OpenCVFunctionName.equals("Iced")) {
             OpenCV = imageProcess.Iced(bitmap);
             callback.callback(100);
             return OpenCV;
-        }
-        else if(OpenCVFunctionName.equals("Relief")) {
+        } else if (OpenCVFunctionName.equals("Relief")) {
             OpenCV = imageProcess.Relief(bitmap);
             callback.callback(100);
             return OpenCV;
@@ -150,8 +149,8 @@ public class CocoModel {
             return null;
         }
         //get user input image dim for last few step to re-create the same dim image
-        int tempw=bitmap.getWidth();
-        int temph=bitmap.getHeight();
+        int tempw = bitmap.getWidth();
+        int temph = bitmap.getHeight();
         //
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(OpenCV, INPUT_SIZE, INPUT_SIZE, false);
         int w = resizedBitmap.getWidth();
@@ -226,7 +225,7 @@ public class CocoModel {
         float maxVal = 0;
         float val = 0;
         float progress = 0;
-        float total =h*w*NUM_CLASSES+10; // 因为后面还有合并操作，所以分母设置的稍微大一点点
+        float total = h * w * NUM_CLASSES + 10; // 因为后面还有合并操作，所以分母设置的稍微大一点点
         int curIndex = 0;
         //set the different color for each different layer
         for (int y = 0; y < h; y++) {
@@ -251,23 +250,21 @@ public class CocoModel {
         Based on the mask to segment the image to get the human part
          */
         Bitmap maskBitmapModifySize = Bitmap.createScaledBitmap(maskBitmap, tempw, temph, false);
-        Bitmap humanPortion=cropBitmapWithMask(OpenCV,maskBitmapModifySize);
+        Bitmap humanPortion = cropBitmapWithMask(OpenCV, maskBitmapModifySize);
 
 
         //putting the modified part to the background image
         Bitmap maskBitmapModifySize1 = Bitmap.createScaledBitmap(maskBitmap, tempw, temph, false);
-        Bitmap humanPortion1=cropBitmapWithMask(humanPortion,maskBitmapModifySize1);
-        Bitmap result=BackgroudReplace(humanPortion1,bitmap);
+        Bitmap humanPortion1 = cropBitmapWithMask(humanPortion, maskBitmapModifySize1);
+        Bitmap result = BackgroudReplace(humanPortion1, bitmap);
         callback.callback(100);
         return result;
     }
 
 
-
     /**
-     *
      * @param original input original image bitmap
-     * @param mask mask which be generated by calling the segment method
+     * @param mask     mask which be generated by calling the segment method
      * @return the human portion from the original image based on the mask
      */
     private Bitmap cropBitmapWithMask(Bitmap original, Bitmap mask) {
@@ -300,6 +297,7 @@ public class CocoModel {
 
         return cropped;
     }
+
     private Bitmap BackgroudReplace(Bitmap cropped/*human part*/, Bitmap original) {
         //the dim of the user imput image
         final int w = original.getWidth();
@@ -309,144 +307,24 @@ public class CocoModel {
         Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint1.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
         Canvas canvas1 = new Canvas(FinalBackgroundWithHuman);
-        if(backgroud!=null)
+        if (backgroud != null)
             canvas1.drawBitmap(backgroud, 0, 0, paint1);
-        canvas1.drawBitmap(cropped,0,0,null);
+        canvas1.drawBitmap(cropped, 0, 0, null);
 
         paint1.setXfermode(null);
         return FinalBackgroundWithHuman;
     }
 
+    private void fillZeroes(int[][] array) {
+        if (array == null) {
+            return;
+        }
 
-
-
-//    private void setInputOutputDetails(Bitmap bitmap) {
-//        // 获取模型输入数据格式
-////        final int maxSize = 257;
-////        int outWidth;
-////        int outHeight;
-////        int inWidth = bitmap.getWidth();
-////        int inHeight = bitmap.getHeight();
-////        if(inWidth > inHeight){
-////            outWidth = maxSize;
-////            outHeight = (inHeight * maxSize) / inWidth;
-////        } else {
-////            outHeight = maxSize;
-////            outWidth = (inWidth * maxSize) / inHeight;
-////        }
-////        mImageData = ByteBuffer.allocateDirect(
-////                1 * INPUT_SIZE * INPUT_SIZE * COLOR_CHANNELS * BYTES_PER_POINT);
-////        mImageData.order(ByteOrder.nativeOrder());
-////
-////        mOutputs = ByteBuffer.allocateDirect(1 * INPUT_SIZE * INPUT_SIZE * NUM_CLASSES * BYTES_PER_POINT);
-////        mOutputs.order(ByteOrder.nativeOrder());
-//
-//
-//
-//        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 513, 513, false);
-//        DataType imageDataType = tfLite.getInputTensor(0).dataType();
-//
-//
-//        inputImageBuffer = new TensorImage(imageDataType);
-//        inputImageBuffer.load(resizedBitmap);
-//
-//        DataType probabilityDataType = tfLite.getOutputTensor(0).dataType();
-//        int[] probabilityShape =tfLite.getOutputTensor(0).shapeSignature();
-//
-//
-//        outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType);
-//    }
-
-//    /**
-//     * Converts ByteBuffer with segmentation mask to the Bitmap
-//     *
-//     * @param byteBuffer Output ByteBuffer from Interpreter.run
-//     * @param imgSizeX Model output image width
-//     * @param imgSizeY Model output image height
-//     * @return Mono color Bitmap mask
-//     */
-//    private Bitmap convertByteBufferToBitmap(ByteBuffer byteBuffer, int imgSizeX, int imgSizeY){
-//        byteBuffer.rewind();
-//        byteBuffer.order(ByteOrder.nativeOrder());
-//        Bitmap bitmap = Bitmap.createBitmap(imgSizeX , imgSizeY, Bitmap.Config.ARGB_4444);
-//        int[] pixels = new int[imgSizeX * imgSizeY];
-//        for (int i = 0; i < imgSizeX * imgSizeY; i++)
-//            if (byteBuffer.getFloat()>0.5)
-//                pixels[i]= Color.argb(100, 255, 105, 180);
-//            else
-//                pixels[i]=Color.argb(0, 0, 0, 0);
-//
-//        bitmap.setPixels(pixels, 0, imgSizeX, 0, 0, imgSizeX, imgSizeY);
-//        return bitmap;
-//    }
-//    private Bitmap getOutputImage(ByteBuffer output){
-//        output.rewind();
-//
-//        int outputWidth = 300;
-//        int outputHeight = 168;
-//        Bitmap bitmap = Bitmap.createBitmap(outputWidth, outputHeight, Bitmap.Config.ARGB_8888);
-//        int [] pixels = new int[outputWidth * outputHeight];
-//        for (int i = 0; i < outputWidth * outputHeight; i++) {
-//            //val a = 0xFF;
-//            //float a = (float) 0xFF;
-//
-//            //val r: Float = output?.float!! * 255.0f;
-//            //byte val = output.get();
-//            float r = ((float) output.get()) * 255.0f;
-//            //float r = ((float) output.get());
-//
-//            //val g: Float = output?.float!! * 255.0f;
-//            float g = ((float) output.get()) * 255.0f;
-//            //float g = ((float) output.get());
-//
-//            //val b: Float = output?.float!! * 255.0f;
-//            float b = ((float) output.get()) * 255.0f;
-//            //float b = ((float) output.get());
-//
-//
-//            //pixels[i] = a shl 24 or (r.toInt() shl 16) or (g.toInt() shl 8) or b.toInt()
-//            pixels[i] = (((int) r) << 16) | (((int) g) << 8) | ((int) b);
-//        }
-//        bitmap.setPixels(pixels, 0, outputWidth, 0, 0, outputWidth, outputHeight);
-//
-//        return bitmap;
-//    }
-//    private int floatToInt(float data) {
-//        int tmp = Math.round(data);
-//        if (tmp < 0){
-//            tmp = 0;
-//        }else if (tmp > 255) {
-//            tmp = 255;
-//        }
-////        Log.e(TAG, tmp + " " + data);
-//        return tmp;
-//    }
-//    private Bitmap floatArrayToBitmap(float[] data, int width, int height) {
-//        int [] intdata = new int[width * height];
-//        // 因为我们用的Bitmap是ARGB的格式，而data是RGB的格式，所以要经过转换，A指的是透明度
-//        for (int i = 0; i < width * height; i++) {
-//            int R = floatToInt(data[3 * i]);
-//            int G = floatToInt(data[3 * i + 1]);
-//            int B = floatToInt(data[3 * i + 2]);
-//
-//            intdata[i] = (0xff << 24) | (R << 16) | (G << 8) | (B << 0);
-//
-//        }
-//        //得到位图
-//        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//        bitmap.setPixels(intdata, 0, width, 0, 0, width, height);
-//        return bitmap;
-//    }
-private void fillZeroes(int[][] array) {
-    if (array == null) {
-        return;
+        int r;
+        for (r = 0; r < array.length; r++) {
+            Arrays.fill(array[r], 0);
+        }
     }
-
-    int r;
-    for (r = 0; r < array.length; r++) {
-        Arrays.fill(array[r], 0);
-    }
-}
 
     private static void debugInputs(Interpreter interpreter) {
         if (interpreter == null) {
@@ -454,7 +332,7 @@ private void fillZeroes(int[][] array) {
         }
 
         final int numOfInputs = interpreter.getInputTensorCount();
-        Logger.debug("[TF-LITE-MODEL] input tensors: [%d]",numOfInputs);
+        Logger.debug("[TF-LITE-MODEL] input tensors: [%d]", numOfInputs);
 
         for (int i = 0; i < numOfInputs; i++) {
             Tensor t = interpreter.getInputTensor(i);
@@ -470,7 +348,7 @@ private void fillZeroes(int[][] array) {
         }
 
         final int numOfOutputs = interpreter.getOutputTensorCount();
-        Logger.debug("[TF-LITE-MODEL] output tensors: [%d]",numOfOutputs);
+        Logger.debug("[TF-LITE-MODEL] output tensors: [%d]", numOfOutputs);
 
         for (int i = 0; i < numOfOutputs; i++) {
             Tensor t = interpreter.getOutputTensor(i);
@@ -479,6 +357,7 @@ private void fillZeroes(int[][] array) {
                     ArrayUtils.intArrayToString(t.shape()));
         }
     }
+
     public void addProgressCallback(final CocoModel.ProgressCallback callback) {
         this.callback = callback;
     }

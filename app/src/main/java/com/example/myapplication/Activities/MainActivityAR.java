@@ -24,8 +24,6 @@ import java.util.Map;
 
 public class MainActivityAR extends AppCompatActivity {
     private static Texture texture;
-
-
     Spinner s;
     Button Preview;
     private boolean isAdded = false;
@@ -36,7 +34,7 @@ public class MainActivityAR extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_ar);
 
-        String[] arraySpinner = new String[] {
+        String[] arraySpinner = new String[]{
                 "Mask", "Mustache"
         };
         s = findViewById(R.id.function);
@@ -50,14 +48,14 @@ public class MainActivityAR extends AppCompatActivity {
             public void onClick(View view) {
                 String text = s.getSelectedItem().toString();
                 if (text.equals("Mask")) {
-                    if(isAdded){
+                    if (isAdded) {
                         Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iterator = faceNodeMap.entrySet().iterator();
                         Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iterator.next();
                         AugmentedFace face = entry.getKey();
                         AugmentedFaceNode node = entry.getValue();
                         node.setParent(null);
                         iterator.remove();
-                        isAdded=false;
+                        isAdded = false;
                     }
                     Texture.builder()
                             .setSource(MainActivityAR.this, R.drawable.mustache1)
@@ -71,9 +69,7 @@ public class MainActivityAR extends AppCompatActivity {
                     assert customArFragment != null;
                     customArFragment.getArSceneView().setCameraStreamRenderPriority(Renderable.RENDER_PRIORITY_FIRST);
                     customArFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
-//            if (modelRenderable == null || texture == null) {
-//                return;
-//            }
+
                         Frame frame = customArFragment.getArSceneView().getArFrame();
                         assert frame != null;
                         Collection<AugmentedFace> augmentedFaces = frame.getUpdatedTrackables(AugmentedFace.class);
@@ -83,12 +79,9 @@ public class MainActivityAR extends AppCompatActivity {
 
                             AugmentedFaceNode augmentedFaceMode = new AugmentedFaceNode(augmentedFace);
                             augmentedFaceMode.setParent(customArFragment.getArSceneView().getScene());
-//                augmentedFaceMode.setFaceRegionsRenderable(modelRenderable);
                             augmentedFaceMode.setFaceMeshTexture(texture);
                             faceNodeMap.put(augmentedFace, augmentedFaceMode);
                             isAdded = true;
-
-                            // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
                             Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iterator = faceNodeMap.entrySet().iterator();
                             Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iterator.next();
                             AugmentedFace face = entry.getKey();
@@ -102,17 +95,17 @@ public class MainActivityAR extends AppCompatActivity {
                     });
                 }
                 if (text.equals("Mustache")) {
-                    if(isAdded){
+                    if (isAdded) {
                         Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iterator = faceNodeMap.entrySet().iterator();
                         Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iterator.next();
                         AugmentedFace face = entry.getKey();
 
-                            AugmentedFaceNode node = entry.getValue();
-                            node.setParent(null);
-                            iterator.remove();
+                        AugmentedFaceNode node = entry.getValue();
+                        node.setParent(null);
+                        iterator.remove();
 
 
-                        isAdded=false;
+                        isAdded = false;
                     }
 
                     Texture.builder()
@@ -127,9 +120,7 @@ public class MainActivityAR extends AppCompatActivity {
                     assert customArFragment != null;
                     customArFragment.getArSceneView().setCameraStreamRenderPriority(Renderable.RENDER_PRIORITY_FIRST);
                     customArFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
-//            if (modelRenderable == null || texture == null) {
-//                return;
-//            }
+
                         Frame frame = customArFragment.getArSceneView().getArFrame();
                         assert frame != null;
                         Collection<AugmentedFace> augmentedFaces = frame.getUpdatedTrackables(AugmentedFace.class);
@@ -139,12 +130,9 @@ public class MainActivityAR extends AppCompatActivity {
 
                             AugmentedFaceNode augmentedFaceMode = new AugmentedFaceNode(augmentedFace);
                             augmentedFaceMode.setParent(customArFragment.getArSceneView().getScene());
-//                augmentedFaceMode.setFaceRegionsRenderable(modelRenderable);
                             augmentedFaceMode.setFaceMeshTexture(texture);
                             faceNodeMap.put(augmentedFace, augmentedFaceMode);
                             isAdded = true;
-
-                            // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
                             Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iterator = faceNodeMap.entrySet().iterator();
                             Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iterator.next();
                             AugmentedFace face = entry.getKey();
@@ -161,12 +149,10 @@ public class MainActivityAR extends AppCompatActivity {
         });
 
 
+    }
 
 
-        }
-
-
-            }
+}
 
 
 
