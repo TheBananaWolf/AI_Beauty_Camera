@@ -59,8 +59,10 @@ public class imageProcessing extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button background;
     private Button save;
+    private Button choose;
     private Uri path;
     public SmallFaceActivity SmallFaceActivity;
+    private String TAG="com.example.myapplication : imageProcessing";
     final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ImageProcess" + File.separator;
 
     @Override
@@ -110,14 +112,12 @@ public class imageProcessing extends AppCompatActivity {
             }
         });
 
-        Button choose = findViewById(R.id.ChooseImage);
+        choose = findViewById(R.id.ChooseImage);
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-
                 startActivityForResult(intent, 1);
 
             }
@@ -179,7 +179,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -317,7 +322,6 @@ public class imageProcessing extends AppCompatActivity {
                 } else if (listForRecyclerViewForImage.getName().equals("FaceBeauty")) {
                     Intent temp = new Intent(imageProcessing.this, DesignActivity.class);
                     temp.putExtra("imageUri", imagePath);
-                    Log.e("wangguanjie", imagePath);
                     temp.putExtra("opt", "");
                     startActivity(temp);
                 } else if (listForRecyclerViewForImage.getName().equals("Diffuse")) {
@@ -396,8 +400,6 @@ public class imageProcessing extends AppCompatActivity {
                     Intent temp = new Intent(imageProcessing.this, SmallFaceActivity.class);
 
                     temp.putExtra("imageUri", imagePath);
-                    Log.e("wangguanjie", imagePath);
-
                     startActivity(temp);
 
 
@@ -494,6 +496,15 @@ public class imageProcessing extends AppCompatActivity {
             }
             path = data.getData();
             image = rotateImage1(data);
+            if(merged!=null){
+                imageViewDest.setImageDrawable(null);
+                imageViewDest.setVisibility(View.GONE);
+            }
+            progressBar.setProgress(0);
+            imageViewSrc.setImageBitmap(image);
+            if(imageViewSrc.getVisibility()==View.GONE){
+                imageViewSrc.setVisibility(View.VISIBLE);
+            }
 
         }
         if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
@@ -517,9 +528,9 @@ public class imageProcessing extends AppCompatActivity {
                 CocoModel.setBackgroud(mBitmap);
             } else
                 Toast.makeText(
-                        imageProcessing.this,
-                        "CHOOSE INPUT IMAGE FIRST!!",
-                        Toast.LENGTH_LONG)
+                                imageProcessing.this,
+                                "CHOOSE INPUT IMAGE FIRST!!",
+                                Toast.LENGTH_LONG)
                         .show();
 
         }
@@ -582,11 +593,12 @@ public class imageProcessing extends AppCompatActivity {
     private void requestPermission() {
         if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(
-                    imageProcessing.this,
-                    "Write external storage permission is required for this demo",
-                    Toast.LENGTH_LONG)
+                            imageProcessing.this,
+                            "Write external storage permission is required for this demo",
+                            Toast.LENGTH_LONG)
                     .show();
         }
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
+
 }

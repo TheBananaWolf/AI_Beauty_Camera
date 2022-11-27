@@ -11,7 +11,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.Log;
-
+import org.tensorflow.lite.gpu.CompatibilityList;
 import com.dailystudio.app.utils.ArrayUtils;
 import com.dailystudio.app.utils.BitmapUtils;
 import com.dailystudio.development.Logger;
@@ -19,6 +19,7 @@ import com.example.myapplication.Utills.ImageProcess;
 
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.Tensor;
+import org.tensorflow.lite.gpu.GpuDelegate;
 import org.tensorflow.lite.nnapi.NnApiDelegate;
 
 import java.io.FileInputStream;
@@ -162,10 +163,19 @@ public class CocoModelForCamera {
             }
         }
 
-        //Config the TFL interpreter
+        // Initialize interpreter with GPU delegate
         Interpreter.Options options = new Interpreter.Options();
-        NnApiDelegate delegate = new NnApiDelegate();
-        options.addDelegate(delegate);
+        CompatibilityList compatList = new CompatibilityList();
+
+        if(compatList.isDelegateSupportedOnThisDevice()){
+            // if the device has a supported GPU, add the GPU delegate
+            GpuDelegate.Options delegateOptions = compatList.getBestOptionsForThisDevice();
+            GpuDelegate gpuDelegate = new GpuDelegate(delegateOptions);
+            options.addDelegate(gpuDelegate);
+        } else {
+            // if the GPU is not supported, run on 4 threads
+            options.setNumThreads(4);
+        }
 
         Interpreter interpreter = new Interpreter(modelFile, options);
 

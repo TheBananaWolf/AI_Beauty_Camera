@@ -12,6 +12,8 @@ import android.util.Log;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.gpu.CompatibilityList;
+import org.tensorflow.lite.gpu.GpuDelegate;
 import org.tensorflow.lite.nnapi.NnApiDelegate;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
@@ -30,7 +32,7 @@ public class SRGanModel {
     private TensorBuffer outputProbabilityBuffer;  //TensorBuffer用于获取模型输出数据
 
     private Activity activity;
-    private NnApiDelegate gpuDelegate;
+    private GpuDelegate gpuDelegate;
     private int scale = 4;
     private int cropBitmapSize = 24;
     private final Paint boxPaint = new Paint();
@@ -68,16 +70,24 @@ public class SRGanModel {
             // 获取在assets中的模型
             MappedByteBuffer modelFile = loadModelFile(activity.getAssets(), modelfile);
             // 设置tflite运行条件，使用4线程和GPU进行加速
+            // Initialize interpreter with GPU delegate
             Interpreter.Options options = new Interpreter.Options();
-            options.setNumThreads(4);
-            gpuDelegate = new NnApiDelegate();
-            options.addDelegate(gpuDelegate);
+            CompatibilityList compatList = new CompatibilityList();
+
+            if(compatList.isDelegateSupportedOnThisDevice()){
+                // if the device has a supported GPU, add the GPU delegate
+                GpuDelegate.Options delegateOptions = compatList.getBestOptionsForThisDevice();
+                GpuDelegate gpuDelegate = new GpuDelegate(delegateOptions);
+                options.addDelegate(gpuDelegate);
+            } else {
+                // if the GPU is not supported, run on 4 threads
+                options.setNumThreads(4);
+            }
             // 实例化tflite
             tfLite = new Interpreter(modelFile, options);
             ret = true;
             Log.v("tfLite", String.valueOf(tfLite));
         } catch (IOException e) {
-            Log.v("WANGGUANJIE", "QQ");
             e.printStackTrace();
         }
 

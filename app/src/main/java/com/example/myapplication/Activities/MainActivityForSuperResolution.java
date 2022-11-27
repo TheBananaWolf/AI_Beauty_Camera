@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -82,7 +83,6 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
         handlerThread = new HandlerThread("inference");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
-
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +175,7 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
         imageViewSrc.setImageBitmap(mBitmap);
         imageViewDest.setImageBitmap(mBitmap);
         srProgressBar.setProgress(0, true);
+
     }
 
     private synchronized void runInBackground(final Runnable r) {

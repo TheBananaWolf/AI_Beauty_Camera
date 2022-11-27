@@ -40,8 +40,6 @@ repositories {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//
-
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.annotation:annotation:1.0.2'
     //noinspection GradleCompatible
@@ -83,7 +81,8 @@ dependencies {
     implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'
     implementation 'com.google.ar:core:1.16.0'
     implementation 'com.android.support:multidex:1.0.3'
-
+    implementation 'org.tensorflow:tensorflow-lite:2.3.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
     // If you want to detect face contours (landmark detection and classification
     // don't require this additional model):
     implementation 'com.google.android.gms:play-services-mlkit-face-detection:16.2.0'
