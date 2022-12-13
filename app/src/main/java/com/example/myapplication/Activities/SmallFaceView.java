@@ -18,11 +18,13 @@ import android.view.View;
 
 /**
  * @author by dingdegao
- *         function: SmallFaceView
- *         算法来源：http://www.gson.org/thesis/warping-thesis.pdf
+ * function: SmallFaceView
+ * 算法来源：http://www.gson.org/thesis/warping-thesis.pdf
  */
 public class SmallFaceView extends View {
 
+    boolean isSmllBody = false;
+    boolean isShowOrigin = false;
     private int mWidth, mHeight;//View 的宽高
     //作用范围半径
     private int r = 160;
@@ -37,15 +39,15 @@ public class SmallFaceView extends View {
     //变形起始坐标,滑动坐标
     private float startX, startY, moveX, moveY;
     //将图像分成多少格
-    private int WIDTH = 200;
-    private int HEIGHT = 200;
+    private final int WIDTH = 200;
+    private final int HEIGHT = 200;
     //交点坐标的个数
-    private int COUNT = (WIDTH + 1) * (HEIGHT + 1);
+    private final int COUNT = (WIDTH + 1) * (HEIGHT + 1);
     //用于保存COUNT的坐标
     //x0, y0, x1, y1......
-    private float[] verts = new float[COUNT * 2];
+    private final float[] verts = new float[COUNT * 2];
     //用于保存原始的坐标
-    private float[] orig = new float[COUNT * 2];
+    private final float[] orig = new float[COUNT * 2];
     private Bitmap mBitmap;
     private boolean isEnableOperate = true;
     private float mScale = 1.0f;
@@ -88,23 +90,6 @@ public class SmallFaceView extends View {
         isEnableOperate = enableOperate;
     }
 
-
-    public void setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
-        if(bitmap == null) {
-            Log.e("fasdfasdfasdfasdfasd","dfasdfasdfasfdasdfa");
-            return;
-        }
-        post(new Runnable() {
-            @Override
-            public void run() {
-                zoomBitmap(mBitmap,getWidth(),getHeight());
-                invalidate();
-            }
-        });
-        invalidate();
-    }
-
     public void setRestoreBitmap(Bitmap bitmap) {
         mBitmap = bitmap;
         invalidate();
@@ -115,11 +100,27 @@ public class SmallFaceView extends View {
     }
 
     public Bitmap getBitmap() {
-        if(mBitmap == null) return null;
+        if (mBitmap == null) return null;
         Bitmap copy = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(copy);
         canvas.drawBitmapMesh(mBitmap, WIDTH, HEIGHT, verts, 0, null, 0, null);
         return copy;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+        if (bitmap == null) {
+            Log.e("fasdfasdfasdfasdfasd", "dfasdfasdfasfdasdfa");
+            return;
+        }
+        post(new Runnable() {
+            @Override
+            public void run() {
+                zoomBitmap(mBitmap, getWidth(), getHeight());
+                invalidate();
+            }
+        });
+        invalidate();
     }
 
     public int getDx() {
@@ -130,10 +131,9 @@ public class SmallFaceView extends View {
         return dy;
     }
 
-    public float getScale(){
+    public float getScale() {
         return mScale;
     }
-
 
     private void restoreVerts() {
         int index = 0;
@@ -164,7 +164,7 @@ public class SmallFaceView extends View {
     }
 
     private void zoomBitmap(Bitmap bitmap, int width, int height) {
-        if(bitmap == null) return;
+        if (bitmap == null) return;
         int dw = bitmap.getWidth();
         int dh = bitmap.getHeight();
 
@@ -208,13 +208,9 @@ public class SmallFaceView extends View {
         invalidate();
     }
 
-    boolean isSmllBody = false;
-
     public void setSmllBody(boolean isSmallBody) {
         isSmllBody = isSmallBody;
     }
-
-    boolean isShowOrigin = false;
 
     public void showOrigin(boolean isShowOrigin) {
         this.isShowOrigin = isShowOrigin;
@@ -224,7 +220,7 @@ public class SmallFaceView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(mBitmap == null) return;
+        if (mBitmap == null) return;
         canvas.save();
         canvas.translate(dx, dy);
         canvas.scale(mScale, mScale);
@@ -267,7 +263,7 @@ public class SmallFaceView extends View {
                 showDirection = false;
 
                 //调用warp方法根据触摸屏事件的坐标点来扭曲verts数组
-                if(mBitmap != null && verts!= null && !mBitmap.isRecycled()) {
+                if (mBitmap != null && verts != null && !mBitmap.isRecycled()) {
                     warp(startX, startY, event.getX(), event.getY());
                 }
 
@@ -283,14 +279,14 @@ public class SmallFaceView extends View {
      * 将屏幕触摸坐标x转换成在图片中的坐标
      */
     public final float toX(float touchX) {
-        return (touchX  - dx) /  mScale;
+        return (touchX - dx) / mScale;
     }
 
     /**
      * 将屏幕触摸坐标y转换成在图片中的坐标
      */
     public final float toY(float touchY) {
-        return (touchY  - dy) /  mScale;
+        return (touchY - dy) / mScale;
     }
 
     private void warp(float startX, float startY, float endX, float endY) {
@@ -317,7 +313,7 @@ public class SmallFaceView extends View {
         for (int i = 0; i < HEIGHT + 1; i++) {
             for (int j = 0; j < WIDTH + 1; j++) {
                 //边界区域不处理
-                if(i < offset || i > HEIGHT - offset || j < offset || j > WIDTH - offset){
+                if (i < offset || i > HEIGHT - offset || j < offset || j > WIDTH - offset) {
                     index = index + 1;
                     continue;
                 }
@@ -334,18 +330,18 @@ public class SmallFaceView extends View {
                     verts[index * 2] = (float) (verts[index * 2] + pullX);
                     verts[index * 2 + 1] = (float) (verts[index * 2 + 1] + pullY);
 
-                   // check
-                    if(verts[index * 2] < 0){
+                    // check
+                    if (verts[index * 2] < 0) {
                         verts[index * 2] = 0;
                     }
-                    if(verts[index * 2] > mBitmap.getWidth()){
-                        verts[index * 2] =  mBitmap.getWidth();
+                    if (verts[index * 2] > mBitmap.getWidth()) {
+                        verts[index * 2] = mBitmap.getWidth();
                     }
 
-                    if(verts[index * 2 + 1] < 0){
-                        verts[index * 2 +1] = 0;
+                    if (verts[index * 2 + 1] < 0) {
+                        verts[index * 2 + 1] = 0;
                     }
-                    if(verts[index * 2 + 1] > mBitmap.getHeight()){
+                    if (verts[index * 2 + 1] > mBitmap.getHeight()) {
                         verts[index * 2 + 1] = mBitmap.getHeight();
                     }
                 }

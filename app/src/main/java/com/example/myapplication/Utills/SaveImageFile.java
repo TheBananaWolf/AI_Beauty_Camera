@@ -17,11 +17,31 @@ import java.util.Random;
 public class SaveImageFile {
     private static final String DCIM = "/DCIM/";
     private static final String CAPTURE = "/capture";
-    private Context context;
+    private final Context context;
     private String fullPath;
 
     public SaveImageFile(Context context) {
         this.context = context;
+    }
+
+    public static boolean saveBitmap(Bitmap bitmap, String path) {
+        boolean ret = false;
+        final File rootDir = new File(path);
+        if (!rootDir.exists()) {
+            if (!rootDir.mkdirs()) {
+
+            }
+        }
+        String filename = path + SystemClock.uptimeMillis() + ".png";
+        try {
+            final FileOutputStream out = new FileOutputStream(filename);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 99, out);
+            out.flush();
+            out.close();
+            ret = true;
+        } catch (final Exception e) {
+        }
+        return ret;
     }
 
     public String getBatchDirectoryName() {
@@ -71,25 +91,5 @@ public class SaveImageFile {
             e.printStackTrace();
         }
         return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
-    }
-
-    public static boolean saveBitmap(Bitmap bitmap, String path) {
-        boolean ret = false;
-        final File rootDir = new File(path);
-        if (!rootDir.exists()) {
-            if (!rootDir.mkdirs()) {
-
-            }
-        }
-        String filename = path + SystemClock.uptimeMillis() + ".png";
-        try {
-            final FileOutputStream out = new FileOutputStream(filename);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 99, out);
-            out.flush();
-            out.close();
-            ret = true;
-        } catch (final Exception e) {
-        }
-        return ret;
     }
 }

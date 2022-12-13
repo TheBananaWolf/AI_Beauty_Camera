@@ -22,9 +22,9 @@ import java.util.HashMap;
  */
 public class MaterialAdapter extends BaseAdapter {
     //  上下文对象
-    private Context context;
+    private final Context context;
     //  素材集合
-    private ArrayList<HashMap<String, String>> materialList;
+    private final ArrayList<HashMap<String, String>> materialList;
 
     public MaterialAdapter(Context context, ArrayList<HashMap<String, String>> materialList) {
         this.context = context;

@@ -28,6 +28,20 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 
 public class ImageProcess {
+    /**
+     * 瘦脸算法
+     *
+     * @param bitmap      原来的bitmap
+     * @return 之后的图片
+     */
+    private static final int WIDTH = 200;
+    private static final int HEIGHT = 200;
+
+    static {
+        System.loadLibrary("opencv_java3");
+    }
+
+    private final Semaphore mSemaphore = new Semaphore(0);
     private PointF leftEyePos;
     private PointF rightEyePos;
     private PointF center;
@@ -35,11 +49,100 @@ public class ImageProcess {
     private List<PointF> rightcheck;
     private List<PointF> faceCont;
 
-    static {
-        System.loadLibrary("opencv_java3");
+    private static int checkY(int disY, Bitmap bitmap) {
+        if (disY < 0) {
+            disY = 0;
+        } else if (disY >= bitmap.getHeight()) {
+            disY = bitmap.getHeight() - 1;
+        }
+        return disY;
     }
 
-    private volatile Semaphore mSemaphore = new Semaphore(0);
+    private static int checkX(int disX, Bitmap bitmap) {
+        if (disX < 0) {
+            disX = 0;
+        } else if (disX >= bitmap.getWidth()) {
+            disX = bitmap.getWidth() - 1;
+        }
+        return disX;
+    }
+
+    public static Bitmap smallFaceMesh(Bitmap bitmap, List<PointF> faceCont, PointF centerPoint, int level) {
+        //交点坐标的个数
+        int COUNT = (WIDTH + 1) * (HEIGHT + 1);
+        //用于保存COUNT的坐标
+        float[] verts = new float[COUNT * 2];
+        float[] org = new float[COUNT * 2];
+        float bmWidth = bitmap.getWidth();
+        float bmHeight = bitmap.getHeight();
+
+        int index = 0;
+        for (int i = 0; i < HEIGHT + 1; i++) {
+            float fy = bmHeight * i / HEIGHT;
+            for (int j = 0; j < WIDTH + 1; j++) {
+                float fx = bmWidth * j / WIDTH;
+                //X轴坐标 放在偶数位
+                org[index * 2] = verts[index * 2] = fx;
+                //Y轴坐标 放在奇数位
+                org[index * 2 + 1] = verts[index * 2 + 1] = fy;
+                index += 1;
+            }
+        }
+        int r = 180 + 15 * level;
+
+        warp(verts, faceCont.get(21).x, faceCont.get(21).y, centerPoint.x, centerPoint.y, r);
+        for (int i = 0; i < COUNT * 2; i++) {
+            if (org[i] != verts[i]) {
+                Log.v("org different verts", String.valueOf(i));
+            }
+        }
+        Bitmap resultBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(resultBitmap);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);       //testing parameters
+        paint.setFilterBitmap(true);    //testing parameters
+
+        paint.setColor(Color.BLUE);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawBitmapMesh(bitmap, WIDTH, HEIGHT, verts, 0, null, 0, paint);
+        //canvas.drawBitmap(bitmap,0,0,null);
+        Log.v("smallFaceMesh", "done");
+        return resultBitmap;
+    }
+
+    private static void warp(float[] verts, float startX, float startY, float endX, float endY, int r) {
+        //计算拖动距离
+        float ddPull = (endX - startX) * (endX - startX) + (endY - startY) * (endY - startY);
+        float dPull = (float) Math.sqrt(ddPull);
+        if (dPull < 2 * r) {
+            dPull = 2 * r;
+        }
+        int powR = r * r;
+        int index = 0;
+        int offset = 1;
+        for (int i = 0; i < HEIGHT + 1; i++) {
+            for (int j = 0; j < WIDTH + 1; j++) {
+                //边界区域不处理
+                if (i < offset || i > HEIGHT - offset || j < offset || j > WIDTH - offset) {
+                    index = index + 1;
+                    continue;
+                }
+                //计算每个坐标点与触摸点之间的距离
+                float dx = verts[index * 2] - startX;
+                float dy = verts[index * 2 + 1] - startY;
+                float dd = dx * dx + dy * dy;
+                if (dd < powR) {
+                    //变形系数，扭曲度
+                    double e = (powR - dd) * (powR - dd) / ((powR - dd + dPull * dPull) * (powR - dd + dPull * dPull));
+                    double pullX = e * (endX - startX);
+                    double pullY = e * (endY - startY);
+                    verts[index * 2] = (float) (verts[index * 2] + pullX);
+                    verts[index * 2 + 1] = (float) (verts[index * 2 + 1] + pullY);
+                }
+                index = index + 1;
+            }
+        }
+    }
 
     private int colordodge(int A, int B) {
         return Math.min(A + (A * B) / (255 - B + 1), 255);
@@ -441,110 +544,6 @@ public class ImageProcess {
 //        transfer = true;
 
         return dstBitmap;
-    }
-
-    private static int checkY(int disY, Bitmap bitmap) {
-        if (disY < 0) {
-            disY = 0;
-        } else if (disY >= bitmap.getHeight()) {
-            disY = bitmap.getHeight() - 1;
-        }
-        return disY;
-    }
-
-    private static int checkX(int disX, Bitmap bitmap) {
-        if (disX < 0) {
-            disX = 0;
-        } else if (disX >= bitmap.getWidth()) {
-            disX = bitmap.getWidth() - 1;
-        }
-        return disX;
-    }
-
-    /**
-     * 瘦脸算法
-     *
-     * @param bitmap      原来的bitmap
-     * @return 之后的图片
-     */
-    private static final int WIDTH = 200;
-    private static final int HEIGHT = 200;
-
-    public static Bitmap smallFaceMesh(Bitmap bitmap, List<PointF> faceCont, PointF centerPoint, int level) {
-        //交点坐标的个数
-        int COUNT = (WIDTH + 1) * (HEIGHT + 1);
-        //用于保存COUNT的坐标
-        float[] verts = new float[COUNT * 2];
-        float[] org = new float[COUNT * 2];
-        float bmWidth = bitmap.getWidth();
-        float bmHeight = bitmap.getHeight();
-
-        int index = 0;
-        for (int i = 0; i < HEIGHT + 1; i++) {
-            float fy = bmHeight * i / HEIGHT;
-            for (int j = 0; j < WIDTH + 1; j++) {
-                float fx = bmWidth * j / WIDTH;
-                //X轴坐标 放在偶数位
-                org[index * 2] = verts[index * 2] = fx;
-                //Y轴坐标 放在奇数位
-                org[index * 2 + 1] = verts[index * 2 + 1] = fy;
-                index += 1;
-            }
-        }
-        int r = 180 + 15 * level;
-
-        warp(verts, faceCont.get(21).x, faceCont.get(21).y, centerPoint.x, centerPoint.y, r);
-        for (int i = 0; i < COUNT * 2; i++) {
-            if (org[i] != verts[i]) {
-                Log.v("org different verts", String.valueOf(i));
-            }
-        }
-        Bitmap resultBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(resultBitmap);
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);       //testing parameters
-        paint.setFilterBitmap(true);    //testing parameters
-
-        paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.STROKE);
-        canvas.drawBitmapMesh(bitmap, WIDTH, HEIGHT, verts, 0, null, 0, paint);
-        //canvas.drawBitmap(bitmap,0,0,null);
-        Log.v("smallFaceMesh", "done");
-        return resultBitmap;
-    }
-
-    private static void warp(float verts[], float startX, float startY, float endX, float endY, int r) {
-        //计算拖动距离
-        float ddPull = (endX - startX) * (endX - startX) + (endY - startY) * (endY - startY);
-        float dPull = (float) Math.sqrt(ddPull);
-        if (dPull < 2 * r) {
-            dPull = 2 * r;
-        }
-        int powR = r * r;
-        int index = 0;
-        int offset = 1;
-        for (int i = 0; i < HEIGHT + 1; i++) {
-            for (int j = 0; j < WIDTH + 1; j++) {
-                //边界区域不处理
-                if (i < offset || i > HEIGHT - offset || j < offset || j > WIDTH - offset) {
-                    index = index + 1;
-                    continue;
-                }
-                //计算每个坐标点与触摸点之间的距离
-                float dx = verts[index * 2] - startX;
-                float dy = verts[index * 2 + 1] - startY;
-                float dd = dx * dx + dy * dy;
-                if (dd < powR) {
-                    //变形系数，扭曲度
-                    double e = (powR - dd) * (powR - dd) / ((powR - dd + dPull * dPull) * (powR - dd + dPull * dPull));
-                    double pullX = e * (endX - startX);
-                    double pullY = e * (endY - startY);
-                    verts[index * 2] = (float) (verts[index * 2] + pullX);
-                    verts[index * 2 + 1] = (float) (verts[index * 2 + 1] + pullY);
-                }
-                index = index + 1;
-            }
-        }
     }
 
 

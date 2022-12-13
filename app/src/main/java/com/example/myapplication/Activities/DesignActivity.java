@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ad.zoomimageview.ZoomImageView;
 import com.example.myapplication.Adapter.MainToolAdapter;
 import com.example.myapplication.R;
 import com.example.myapplication.Utills.ColorPickerSeekbar;
@@ -36,7 +37,6 @@ import com.example.myapplication.Utills.FaceGlow;
 import com.example.myapplication.Utills.LipDraw;
 import com.example.myapplication.Utills.SaveImageFile;
 import com.example.myapplication.Utills.ToolType;
-import com.ad.zoomimageview.ZoomImageView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -55,12 +55,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DesignActivity extends AppCompatActivity implements MainToolAdapter.OnToolItemSelected  {
+public class DesignActivity extends AppCompatActivity implements MainToolAdapter.OnToolItemSelected {
     public static final int NEW_IMAGE_REQUEST = 2;
     private static int tempColor = Color.RED, tempAlpha = 80, tempColorProcess = 0;
     private Uri imageUri;
     private Bitmap newTempBitmap;
-    private List<Bitmap> bitmapList = new ArrayList<>();
+    private final List<Bitmap> bitmapList = new ArrayList<>();
     private InputImage inputImage;
     private ZoomImageView mainImageView;
     private FloatingActionButton btnFaceDetect;
@@ -136,11 +136,11 @@ public class DesignActivity extends AppCompatActivity implements MainToolAdapter
             Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
 
             String data = intent.getStringExtra("opt");
-            if (data.equals("captureBtn-opt-front")){
+            if (data.equals("captureBtn-opt-front")) {
                 bitmap = rotateImage(bitmap, -90);
             }
 
-            if (data.equals("captureBtn-opt-back")){
+            if (data.equals("captureBtn-opt-back")) {
                 bitmap = rotateImage(bitmap, 90);
             }
 
@@ -363,10 +363,10 @@ public class DesignActivity extends AppCompatActivity implements MainToolAdapter
             txtColor.setVisibility(View.GONE);
             tempColor = Color.WHITE;
             alphaSeekBar.setProgress(15);
-            tempAlpha =15;
-        }else if (toolType == ToolType.LIPS_BEAUTY){
+            tempAlpha = 15;
+        } else if (toolType == ToolType.LIPS_BEAUTY) {
             alphaSeekBar.setProgress(80);
-            tempAlpha =80;
+            tempAlpha = 80;
         }
         colorPickerSeekbar.init();
         txtColor.setText("Selected Color");
@@ -437,10 +437,11 @@ public class DesignActivity extends AppCompatActivity implements MainToolAdapter
         });
         dialog.show();
     }
+
     /**
      * 对图片进行旋转，拍照后应用老是显示图片横向，而且是逆时针90度，现在给他设置成显示顺时针90度
      *
-     * @param bitmap    图片
+     * @param bitmap 图片
      * @param degree 顺时针旋转的角度
      * @return 返回旋转后的位图
      */

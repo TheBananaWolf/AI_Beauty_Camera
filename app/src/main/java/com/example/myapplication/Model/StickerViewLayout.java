@@ -1,11 +1,12 @@
 package com.example.myapplication.Model;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.LinkedList;
 
@@ -15,7 +16,7 @@ import java.util.LinkedList;
 
 public class StickerViewLayout extends FrameLayout {
 
-    private LinkedList<StickerView> mStickerViewList = new LinkedList<>();
+    private final LinkedList<StickerView> mStickerViewList = new LinkedList<>();
 
     public StickerViewLayout(@NonNull Context context) {
         super(context);

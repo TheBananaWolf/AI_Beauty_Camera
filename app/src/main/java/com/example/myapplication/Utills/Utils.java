@@ -176,7 +176,7 @@ public class Utils {
             File[] files = file.listFiles();
             ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
             for (int i = 0; i < files.length; i++) {
-                if (!files[i].getName().toString().startsWith("thumbnail")) {
+                if (!files[i].getName().startsWith("thumbnail")) {
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name", files[i].getName());// 原图名字
                     map.put("thumbnailname", "thumbnail_" + files[i].getName());// 缩略图名字

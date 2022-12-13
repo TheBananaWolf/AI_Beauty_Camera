@@ -14,7 +14,6 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.CompatibilityList;
 import org.tensorflow.lite.gpu.GpuDelegate;
-import org.tensorflow.lite.nnapi.NnApiDelegate;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
@@ -26,16 +25,14 @@ import java.util.ArrayList;
 
 public class SRGanModel {
     private static final String TAG = "FANG";
-
+    private final Paint boxPaint = new Paint();
     private Interpreter tfLite;  //Interpreter主要用于加载模型和执行推理(转发)操作, load the model and perform inference (forward) operations
     private TensorImage inputImageBuffer;  //TensorImage用于向模型传输输入数据
     private TensorBuffer outputProbabilityBuffer;  //TensorBuffer用于获取模型输出数据
-
-    private Activity activity;
+    private final Activity activity;
     private GpuDelegate gpuDelegate;
     private int scale = 4;
-    private int cropBitmapSize = 24;
-    private final Paint boxPaint = new Paint();
+    private final int cropBitmapSize = 24;
     private SRProgressCallback callback;
 
     public SRGanModel(Activity activity) {
@@ -74,7 +71,7 @@ public class SRGanModel {
             Interpreter.Options options = new Interpreter.Options();
             CompatibilityList compatList = new CompatibilityList();
 
-            if(compatList.isDelegateSupportedOnThisDevice()){
+            if (compatList.isDelegateSupportedOnThisDevice()) {
                 // if the device has a supported GPU, add the GPU delegate
                 GpuDelegate.Options delegateOptions = compatList.getBestOptionsForThisDevice();
                 GpuDelegate gpuDelegate = new GpuDelegate(delegateOptions);
@@ -220,15 +217,6 @@ public class SRGanModel {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(intdata, 0, width, 0, 0, width, height);
         return bitmap;
-    }
-
-    /***
-     * 这个类用来存放切分后的小块图片的信息
-     */
-    private class SplitBitmap {
-        public int row; // 当前小块图片相对原图处于哪一行
-        public int column; // 当前小块图片相对原图处于哪一列
-        public Bitmap bitmap; // 当前小块图片的位图
     }
 
     /***
@@ -398,6 +386,15 @@ public class SRGanModel {
     }
 
     public interface SRProgressCallback {
-        public void callback(int progress);
+        void callback(int progress);
+    }
+
+    /***
+     * 这个类用来存放切分后的小块图片的信息
+     */
+    private class SplitBitmap {
+        public int row; // 当前小块图片相对原图处于哪一行
+        public int column; // 当前小块图片相对原图处于哪一列
+        public Bitmap bitmap; // 当前小块图片的位图
     }
 }

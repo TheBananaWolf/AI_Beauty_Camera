@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Message;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -37,6 +36,8 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
     //sytle_transfer_anime.tflite or gan_generator.tflite or SP.tflite
     private static final String SRGAN_MODEL_FILE = "gan_generator.tflite";
     private static final String TAG = "FANG";
+    private static final Random random = new Random();
+    final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SuperResolution" + File.separator;
     private Button testButton;
     private Button selectButton;
     private Button saveButton;
@@ -46,11 +47,9 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
     private Activity activity;
     private SRGanModel srGanModel;
     private Bitmap mergeBitmap;
-    private String[] testImages = {"0829x4-crop.png", "0851x4-crop.png", "0869x4-crop.png","1.png", "2.png"};
-    private static final Random random = new Random();
+    private final String[] testImages = {"0829x4-crop.png", "0851x4-crop.png", "0869x4-crop.png", "1.png", "2.png"};
     private Handler handler;
     private HandlerThread handlerThread;
-    final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SuperResolution" + File.separator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +102,8 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 resetView();
-                Intent intent= new Intent(Intent.ACTION_PICK,null);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                Intent intent = new Intent(Intent.ACTION_PICK, null);
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, 0x1);
             }
         });
@@ -114,7 +113,7 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
             public void onClick(View v) {
                 if (mergeBitmap != null) {
                     String text = "Save failed!";
-                    if (saveBitmap(mergeBitmap)){
+                    if (saveBitmap(mergeBitmap)) {
                         text = "Save success!";
                     }
                     Toast toast = Toast.makeText(
@@ -137,16 +136,16 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(
-                        MainActivityForSuperResolution.this,
-                        "Write external storage permission is required for this demo",
-                        Toast.LENGTH_LONG)
+                                MainActivityForSuperResolution.this,
+                                "Write external storage permission is required for this demo",
+                                Toast.LENGTH_LONG)
                         .show();
             }
-            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
 
-    private void srGanInference(Bitmap bitmap){
+    private void srGanInference(Bitmap bitmap) {
 
         runInBackground(new Runnable() {
             @Override
@@ -188,15 +187,15 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // TODO Auto-generated method stub
-        if(data == null) {
+        if (data == null) {
             return;
         }
 
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
             srGanInference(bitmap);
-        }catch (Exception e){
-            Log.d("MainActivity","[*]"+e);
+        } catch (Exception e) {
+            Log.d("MainActivity", "[*]" + e);
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -205,7 +204,7 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
     private boolean saveBitmap(Bitmap bitmap) {
         boolean ret = false;
         final File rootDir = new File(SR_ROOT);
-        if (!rootDir.exists()){
+        if (!rootDir.exists()) {
             if (!rootDir.mkdirs()) {
                 Log.e(TAG, "Make dir failed");
             }
@@ -220,7 +219,7 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
             out.close();
             ret = true;
         } catch (final Exception e) {
-            Log.e(TAG,  "Exception!");
+            Log.e(TAG, "Exception!");
         }
         return ret;
     }

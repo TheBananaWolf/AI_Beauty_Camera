@@ -26,11 +26,11 @@ public class MainActivityForObject extends AppCompatActivity {
     private static final String TAG = MainActivityForObject.class.getName();
     private static final int USE_PHOTO = 1001;
     private static final int START_CAMERA = 1002;
+    ObjectDetection test = new ObjectDetection();
     private String camera_image_path;
     private ImageView show_image;
     private TextView result_text;
     private boolean load_result = false;
-    ObjectDetection test = new ObjectDetection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

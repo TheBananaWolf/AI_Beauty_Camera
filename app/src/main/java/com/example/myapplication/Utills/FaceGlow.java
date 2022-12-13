@@ -26,35 +26,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class FaceGlow {
-    public Bitmap drawFace(Bitmap bitmap, Face face, int color, int alpha) {
-        Bitmap tempBitmap = null;
-        try {
-            tempBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
-            Canvas canvas = new Canvas(tempBitmap);
-            canvas.drawBitmap(bitmap, 0f, 0f, null);
-
-            Path mainPath = new Path();
-
-            List<PointF> pointsUpperTop = Objects.requireNonNull(face.getContour(FaceContour.FACE)).getPoints();
-            mainPath.moveTo(pointsUpperTop.get(0).x, pointsUpperTop.get(0).y);
-            for (PointF pointF : pointsUpperTop) {
-                float px = pointF.x;
-                float py = pointF.y;
-                mainPath.lineTo(px, py);
-            }
-//            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//            paint.setColor(Color.RED);
-//            paint.setStyle(Paint.Style.STROKE);
-//            paint.setStrokeWidth(15.0f);
-//            canvas.drawPath(mainPath, paint);
-            draw(canvas, mainPath, color, alpha);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return tempBitmap;
-    }
-
     //    Point point = new Point();
 //        point.set(50, 50);
     public static void draw(Canvas canvas, Path facePath, int color, int alpha) {
@@ -112,7 +83,6 @@ public class FaceGlow {
         return bitmap;
     }
 
-
     public static Bitmap createWaterMark(Bitmap src, String watermark, Point location, int colors, int alpha, int size, boolean underline) {
         int w = src.getWidth();
         int h = src.getHeight();
@@ -130,5 +100,34 @@ public class FaceGlow {
         canvas.drawText(watermark, location.x, location.y, paint);
 
         return result;
+    }
+
+    public Bitmap drawFace(Bitmap bitmap, Face face, int color, int alpha) {
+        Bitmap tempBitmap = null;
+        try {
+            tempBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(tempBitmap);
+            canvas.drawBitmap(bitmap, 0f, 0f, null);
+
+            Path mainPath = new Path();
+
+            List<PointF> pointsUpperTop = Objects.requireNonNull(face.getContour(FaceContour.FACE)).getPoints();
+            mainPath.moveTo(pointsUpperTop.get(0).x, pointsUpperTop.get(0).y);
+            for (PointF pointF : pointsUpperTop) {
+                float px = pointF.x;
+                float py = pointF.y;
+                mainPath.lineTo(px, py);
+            }
+//            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//            paint.setColor(Color.RED);
+//            paint.setStyle(Paint.Style.STROKE);
+//            paint.setStrokeWidth(15.0f);
+//            canvas.drawPath(mainPath, paint);
+            draw(canvas, mainPath, color, alpha);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tempBitmap;
     }
 }

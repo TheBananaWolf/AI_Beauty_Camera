@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.example.myapplication.R;
 
 /**
@@ -21,19 +22,13 @@ import com.example.myapplication.R;
  */
 public class StickerView extends View {
 
+    /**
+     * 图片操作类型
+     */
+    public static final int OPER_SELECTED = 1;      // 选择
+    public static final int OPER_TRANSLATE = 2;     // 移动
+    public static final int OPER_ROTATE_SCALE = 3;  // 旋转缩放
     private static final String TAG = "StickerView";
-    private Context context;
-    private String imgPath;
-    private Bitmap mainBmp, deleteBmp, controlBmp;
-    private int mainBmpWidth, mainBmpHeight, deleteBmpWidth, deleteBmpHeight, controlBmpWidth, controlBmpHeight;
-    private float[] srcPs, dstPs;
-    private Matrix matrix;
-    private Paint paint, paintFrame;
-    private Point lastPoint;                        // 记录最后一次Touch事件触摸点
-    private float defaultDegree, lastDegree;
-    private boolean isSelected = true;              // 默认选中状态
-    private boolean isRemoved = false;              // 是否被移除
-
     /**
      * 图片控制点
      * 0--------1
@@ -45,47 +40,34 @@ public class StickerView extends View {
     private static final int CP_NONE = -1;
     private static final int CP_REMOVE = 0;
     private static final int CP_ROTATE_SCALE = 2;
-    private int current_cp = CP_NONE;
-
-    /**
-     * 图片操作类型
-     */
-    public static final int OPER_SELECTED = 1;      // 选择
-    public static final int OPER_TRANSLATE = 2;     // 移动
-    public static final int OPER_ROTATE_SCALE = 3;  // 旋转缩放
-
-
-    /**
-     * 素材选中监听
-     */
-    public interface OnSelectedListener {
-        void onSelected();
-    }
-
     public OnSelectedListener mOnSelectedListener = null;
-
-    public void setOnSelectedListener(OnSelectedListener listener) {
-        this.mOnSelectedListener = listener;
-    }
-
-    /**
-     * 素材移除监听
-     */
-    public interface OnRemovedListener {
-        void onRemoved();
-    }
-
     public OnRemovedListener mOnRemovedListener = null;
-
-    public void setOnRemovedListener(OnRemovedListener listener) {
-        this.mOnRemovedListener = listener;
-    }
+    private final Context context;
+    private final String imgPath;
+    private Bitmap mainBmp, deleteBmp, controlBmp;
+    private int mainBmpWidth, mainBmpHeight, deleteBmpWidth, deleteBmpHeight, controlBmpWidth, controlBmpHeight;
+    private float[] srcPs, dstPs;
+    private Matrix matrix;
+    private Paint paint, paintFrame;
+    private Point lastPoint;                        // 记录最后一次Touch事件触摸点
+    private float defaultDegree, lastDegree;
+    private boolean isSelected = true;              // 默认选中状态
+    private boolean isRemoved = false;              // 是否被移除
+    private int current_cp = CP_NONE;
 
     public StickerView(Context context, String imgPath) {
         super(context);
         this.context = context;
         this.imgPath = imgPath;
         initData();
+    }
+
+    public void setOnSelectedListener(OnSelectedListener listener) {
+        this.mOnSelectedListener = listener;
+    }
+
+    public void setOnRemovedListener(OnRemovedListener listener) {
+        this.mOnRemovedListener = listener;
     }
 
     private void initData() {
@@ -195,11 +177,7 @@ public class StickerView extends View {
 
         float[] tempPs = new float[]{0, 0};
         inMatrix.mapPoints(tempPs, new float[]{x, y});
-        if (tempPs[0] > 0 && tempPs[0] < mainBmp.getWidth() && tempPs[1] > 0 && tempPs[1] < mainBmp.getHeight()) {
-            return true;
-        } else {
-            return false;
-        }
+        return tempPs[0] > 0 && tempPs[0] < mainBmp.getWidth() && tempPs[1] > 0 && tempPs[1] < mainBmp.getHeight();
     }
 
     /**
@@ -376,6 +354,20 @@ public class StickerView extends View {
      */
     public String getImgPath() {
         return imgPath;
+    }
+
+    /**
+     * 素材选中监听
+     */
+    public interface OnSelectedListener {
+        void onSelected();
+    }
+
+    /**
+     * 素材移除监听
+     */
+    public interface OnRemovedListener {
+        void onRemoved();
     }
 
 }  

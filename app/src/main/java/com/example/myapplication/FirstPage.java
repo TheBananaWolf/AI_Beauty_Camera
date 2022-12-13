@@ -28,16 +28,19 @@ public class FirstPage extends AppCompatActivity {
         super.onRestart();
         Log.d("wangguanjie", "onRestart");
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         Log.d("wangguanjie", "onPause");
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         Log.d("wangguanjie", "onResume");
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -45,7 +48,7 @@ public class FirstPage extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState){
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d("wangguanjie", "onSaveInstanceState");
     }

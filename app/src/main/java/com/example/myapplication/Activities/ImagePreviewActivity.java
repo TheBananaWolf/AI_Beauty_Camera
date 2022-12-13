@@ -10,14 +10,15 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.R;
 import com.ad.zoomimageview.ZoomImageView;
+import com.example.myapplication.R;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 
 public class ImagePreviewActivity extends AppCompatActivity {
+    String data = "";
     private ZoomImageView imageView;
     private Uri imageUri;
 
@@ -28,7 +29,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         imageView = findViewById(R.id.preview_imageview);
         getImageUriFromIntent();
     }
-    String data = "";
+
     private void getImageUriFromIntent() {
         try {
             Intent intent = getIntent();
@@ -39,15 +40,15 @@ public class ImagePreviewActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
 
             data = intent.getStringExtra("opt");
-            if (data.equals("captureBtn-opt-front")){
+            if (data.equals("captureBtn-opt-front")) {
                 bitmap = rotateImage(bitmap, -90);
             }
 
-            if (data.equals("captureBtn-opt-back")){
+            if (data.equals("captureBtn-opt-back")) {
                 bitmap = rotateImage(bitmap, 90);
             }
 
-            if (data.equals("pickImageBtn")){
+            if (data.equals("pickImageBtn")) {
                 bitmap = rotateImage(bitmap, 0);
             }
 
@@ -72,7 +73,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
     public void onCorrect(View view) {
         Intent intent = new Intent(ImagePreviewActivity.this, DesignActivity.class);
         intent.putExtra("imageUri", imageUri.toString());
-        intent.putExtra("opt",data);
+        intent.putExtra("opt", data);
         startActivity(intent);
         finish();
     }
@@ -80,7 +81,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
     /**
      * 对图片进行旋转，拍照后应用老是显示图片横向，而且是逆时针90度，现在给他设置成显示顺时针90度
      *
-     * @param bitmap    图片
+     * @param bitmap 图片
      * @param degree 顺时针旋转的角度
      * @return 返回旋转后的位图
      */

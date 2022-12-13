@@ -31,7 +31,7 @@ public class MaterialActivity extends Activity {
 
     public static final String MATERIAL_PATH = "material_path";
 
-    private int materialType = 1;// 贴图类别
+    private final int materialType = 1;// 贴图类别
 
     private SharedPreferences preferences = null;
 
@@ -79,7 +79,7 @@ public class MaterialActivity extends Activity {
         File file = new File(dir.getAbsolutePath() + "/" + Utils.getMaterialDescription(materialType) + "/" + "wangguanjie" + "/materials.xml");
         try {
             InputStream in = new FileInputStream(file);
-            ArrayList<HashMap<String, String>> tempList = Utils.parseXML(in,"wangguanjie" );
+            ArrayList<HashMap<String, String>> tempList = Utils.parseXML(in, "wangguanjie");
             for (int j = 0; j < tempList.size(); j++) {
                 materialList.add(tempList.get(j));
                 Log.v("wangguanjie count", String.valueOf(tempList.get(j)));

@@ -16,18 +16,7 @@ import com.example.myapplication.Utills.ListForRecyclerViewForImage;
 import java.util.List;
 
 public class AdapterForRecycle extends RecyclerView.Adapter<AdapterForRecycle.ViewHolder> {
-    private List<ListForRecyclerViewForImage> mFruitlis;
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView fruitImage;
-        TextView fruitName;
-
-        public ViewHolder(View view) {
-            super(view);
-            fruitImage = view.findViewById(R.id.fruit_image);
-            fruitName = view.findViewById(R.id.fruit_name);
-        }
-    }
+    private final List<ListForRecyclerViewForImage> mFruitlis;
 
     public AdapterForRecycle(List<ListForRecyclerViewForImage> listForRecyclerViewForImageList) {
         mFruitlis = listForRecyclerViewForImageList;
@@ -59,5 +48,16 @@ public class AdapterForRecycle extends RecyclerView.Adapter<AdapterForRecycle.Vi
     @Override
     public int getItemCount() {
         return mFruitlis.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView fruitImage;
+        TextView fruitName;
+
+        public ViewHolder(View view) {
+            super(view);
+            fruitImage = view.findViewById(R.id.fruit_image);
+            fruitName = view.findViewById(R.id.fruit_name);
+        }
     }
 }

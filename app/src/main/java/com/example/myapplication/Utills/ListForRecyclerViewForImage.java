@@ -1,8 +1,8 @@
 package com.example.myapplication.Utills;
 
 public class ListForRecyclerViewForImage {
-    private String name;
-    private int imageID;
+    private final String name;
+    private final int imageID;
 
     public ListForRecyclerViewForImage(String name, int imageID) {
         this.name = name;

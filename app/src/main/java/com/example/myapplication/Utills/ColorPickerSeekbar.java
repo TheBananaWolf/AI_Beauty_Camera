@@ -13,24 +13,24 @@ import android.widget.SeekBar;
 public class ColorPickerSeekbar extends androidx.appcompat.widget.AppCompatSeekBar implements SeekBar.OnSeekBarChangeListener {
     private OnColorSeekBarChangeListener mOnColorSeekbarChangeListener;
 
-    public void setOnColorSeekbarChangeListener(OnColorSeekBarChangeListener listener) {
-        this.mOnColorSeekbarChangeListener = listener;
-    }
-
     public ColorPickerSeekbar(Context context) {
         super(context);
         setOnSeekBarChangeListener(this);
     }
-
 
     public ColorPickerSeekbar(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOnSeekBarChangeListener(this);
     }
 
+
     public ColorPickerSeekbar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setOnSeekBarChangeListener(this);
+    }
+
+    public void setOnColorSeekbarChangeListener(OnColorSeekBarChangeListener listener) {
+        this.mOnColorSeekbarChangeListener = listener;
     }
 
     @Override
@@ -52,41 +52,6 @@ public class ColorPickerSeekbar extends androidx.appcompat.widget.AppCompatSeekB
         shape.getPaint().setShader(colorGradient);
         this.setProgressDrawable(shape);
         this.setMax(256 * 7 - 1);
-    }
-
-    /**
-     * A callback that notifies clients when the color has been changed.
-     * This includes changes that were initiated by the user through a
-     * touch gesture or arrow key/trackball as well as changes that were initiated programmatically.
-     */
-    public interface OnColorSeekBarChangeListener {
-
-        /**
-         * Notification that the color has changed. Clients can use the fromUser parameter
-         * to distinguish user-initiated changes from those that occurred programmatically.
-         * Parameters:
-         *
-         * @param seekBar The SeekBar whose progress has changed
-         * @param color   The current color-int from alpha, red, green, blue components.
-         * @param b       True if the progress change was initiated by the user.
-         */
-        void onColorChanged(SeekBar seekBar, int color, boolean b);
-
-        /**
-         * Notification that the user has started a touch gesture.
-         * Clients may want to use this to disable advancing the seekbar.
-         *
-         * @param seekBar The SeekBar in which the touch gesture began
-         */
-        void onStartTrackingTouch(SeekBar seekBar);
-
-        /**
-         * Notification that the user has finished a touch gesture.
-         * Clients may want to use this to re-enable advancing the seekbar.
-         *
-         * @param seekBar The SeekBar in which the touch gesture finished
-         */
-        void onStopTrackingTouch(SeekBar seekBar);
     }
 
     @Override
@@ -141,6 +106,41 @@ public class ColorPickerSeekbar extends androidx.appcompat.widget.AppCompatSeekB
             return;
         }
         mOnColorSeekbarChangeListener.onStopTrackingTouch(seekBar);
+    }
+
+    /**
+     * A callback that notifies clients when the color has been changed.
+     * This includes changes that were initiated by the user through a
+     * touch gesture or arrow key/trackball as well as changes that were initiated programmatically.
+     */
+    public interface OnColorSeekBarChangeListener {
+
+        /**
+         * Notification that the color has changed. Clients can use the fromUser parameter
+         * to distinguish user-initiated changes from those that occurred programmatically.
+         * Parameters:
+         *
+         * @param seekBar The SeekBar whose progress has changed
+         * @param color   The current color-int from alpha, red, green, blue components.
+         * @param b       True if the progress change was initiated by the user.
+         */
+        void onColorChanged(SeekBar seekBar, int color, boolean b);
+
+        /**
+         * Notification that the user has started a touch gesture.
+         * Clients may want to use this to disable advancing the seekbar.
+         *
+         * @param seekBar The SeekBar in which the touch gesture began
+         */
+        void onStartTrackingTouch(SeekBar seekBar);
+
+        /**
+         * Notification that the user has finished a touch gesture.
+         * Clients may want to use this to re-enable advancing the seekbar.
+         *
+         * @param seekBar The SeekBar in which the touch gesture finished
+         */
+        void onStopTrackingTouch(SeekBar seekBar);
     }
 
 }

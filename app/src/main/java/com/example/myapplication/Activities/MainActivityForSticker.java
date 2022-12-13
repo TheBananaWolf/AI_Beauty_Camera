@@ -1,9 +1,7 @@
 package com.example.myapplication.Activities;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,8 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.Model.StickerView;
 import com.example.myapplication.Model.StickerViewLayout;
@@ -37,7 +33,7 @@ public class MainActivityForSticker extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_FOR_PICTURE = 1;
 
-    public  ImageView img;
+    public ImageView img;
     private Context mContext;
     private TextView saveBtn;
     private StickerViewLayout mStickerLayout;
@@ -191,7 +187,8 @@ public class MainActivityForSticker extends AppCompatActivity {
         Toast.makeText(mContext, "已保存:" + f.getAbsolutePath(), Toast.LENGTH_SHORT).show();
         Log.v("wangguanjie", f.getAbsolutePath());
     }
-    public void setSrc(Bitmap src){
-        this.src=src;
+
+    public void setSrc(Bitmap src) {
+        this.src = src;
     }
 }

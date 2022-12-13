@@ -39,12 +39,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MainActivityForFaceBeauty extends AppCompatActivity {
+    private static final int IMAGE_REQUEST = 100;
     private static int lensFacing = CameraSelector.LENS_FACING_BACK;
     private CardView captureBtn, pickImageBtn, swipCamera;
     private PreviewView cameraPreviewView;
-    private static final int IMAGE_REQUEST = 100;
     private RelativeLayout rootLayout;
-    private Executor executor = Executors.newSingleThreadExecutor();
+    private final Executor executor = Executors.newSingleThreadExecutor();
     private Camera camera;
     private String opt = "";
 

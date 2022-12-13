@@ -1,8 +1,6 @@
 package com.example.myapplication.Activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.example.myapplication.R;
 
 import java.io.File;
@@ -38,6 +35,7 @@ import java.io.InputStream;
 public class SmallFaceActivity extends AppCompatActivity {
 
     private static final int PICK_PHOTO_FOR_AVATAR = 1;
+    final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ImageProcess" + File.separator;
     private ImageView img;
     private ImageView imgResult;
     private SmallFaceView smallFaceView;
@@ -47,7 +45,17 @@ public class SmallFaceActivity extends AppCompatActivity {
     private boolean isShowCompare = false;
     private String imagePath;
     private Button save;
-    final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ImageProcess" + File.separator;
+
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,26 +81,26 @@ public class SmallFaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 com.example.myapplication.Utills.SaveImageFile.saveBitmap(smallFaceView.getBitmap(), SR_ROOT);
-               Toast.makeText(SmallFaceActivity.this,"Image is stored in the "+SR_ROOT,Toast.LENGTH_SHORT).show();
+                Toast.makeText(SmallFaceActivity.this, "Image is stored in the " + SR_ROOT, Toast.LENGTH_SHORT).show();
             }
 
 
         });
-        if(inputImage==null)
-        Log.v("szdfasdfasdfasfasdf","dafasdfasdfasdfasd");
+        if (inputImage == null)
+            Log.v("szdfasdfasdfasfasdf", "dafasdfasdfasdfasd");
 
         Intent intent = getIntent();
         Log.e("tomtomtotm", String.valueOf((intent.getExtras()).getString("imageUri")));
 
         try {
-        Uri imageUri = Uri.fromFile(new File((intent.getExtras()).getString("imageUri")));
-        final InputStream stream;
+            Uri imageUri = Uri.fromFile(new File((intent.getExtras()).getString("imageUri")));
+            final InputStream stream;
 
-        stream = getContentResolver().openInputStream(imageUri);
+            stream = getContentResolver().openInputStream(imageUri);
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        inputImage = BitmapFactory.decodeStream(stream, null, options);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inMutable = true;
+            inputImage = BitmapFactory.decodeStream(stream, null, options);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -110,7 +118,6 @@ public class SmallFaceActivity extends AppCompatActivity {
         }
     }
 
-
     @SuppressLint("LongLogTag")
     public Bitmap rotateImage(Intent data) {
         //create new matrix
@@ -120,7 +127,7 @@ public class SmallFaceActivity extends AppCompatActivity {
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         Log.v("array size", String.valueOf(filePathColumn.length));
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-        Log.v("cursor size", String.valueOf(cursor.getCount()) + " " + String.valueOf(cursor.getColumnName(0)));
+        Log.v("cursor size", cursor.getCount() + " " + cursor.getColumnName(0));
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         imagePath = cursor.getString(columnIndex);
@@ -143,16 +150,5 @@ public class SmallFaceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return result;
-    }
-
-    private static int exifToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
-        }
-        return 0;
     }
 }

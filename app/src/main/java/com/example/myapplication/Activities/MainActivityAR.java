@@ -24,10 +24,10 @@ import java.util.Map;
 
 public class MainActivityAR extends AppCompatActivity {
     private static Texture texture;
+    private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
     Spinner s;
     Button Preview;
     private boolean isAdded = false;
-    private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

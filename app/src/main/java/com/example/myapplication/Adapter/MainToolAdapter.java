@@ -25,10 +25,6 @@ public class MainToolAdapter extends RecyclerView.Adapter<MainToolAdapter.ViewHo
         toolList.add(new ToolModel("Face Glow", ToolType.FACE_GLOW, R.drawable.ic_face));
     }
 
-    public interface OnToolItemSelected {
-        void OnToolItemSelected(ToolType toolType);
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,9 +44,13 @@ public class MainToolAdapter extends RecyclerView.Adapter<MainToolAdapter.ViewHo
         return toolList.size();
     }
 
+    public interface OnToolItemSelected {
+        void OnToolItemSelected(ToolType toolType);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTextView;
-        private ImageView mImageView;
+        private final TextView mTextView;
+        private final ImageView mImageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,9 +66,9 @@ public class MainToolAdapter extends RecyclerView.Adapter<MainToolAdapter.ViewHo
     }
 
     public class ToolModel {
-        private String mTitle;
-        private ToolType mToolType;
-        private int mIcon;
+        private final String mTitle;
+        private final ToolType mToolType;
+        private final int mIcon;
 
         public ToolModel(String mTitle, ToolType mToolType, int mIcon) {
             this.mTitle = mTitle;
