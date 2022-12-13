@@ -144,6 +144,7 @@ public class imageProcessing extends AppCompatActivity {
                     Toast toast = Toast.makeText(
                             getApplicationContext(), text, Toast.LENGTH_SHORT);
                     toast.show();
+                    merged.recycle();
                 }
             }
 
@@ -202,7 +203,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -220,7 +226,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -238,7 +249,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -257,7 +273,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -276,7 +297,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -294,7 +320,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -312,7 +343,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -335,7 +371,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -353,7 +394,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -371,7 +417,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -389,7 +440,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
@@ -414,7 +470,12 @@ public class imageProcessing extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             if (merged != null) {
-                                                imageViewSrc.setImageBitmap(image);
+                                                imageViewSrc.setImageDrawable(null);
+                                                imageViewSrc.setVisibility(View.GONE);
+                                                Toast.makeText(imageProcessing.this,"Image Replaced by the Processed Image",Toast.LENGTH_LONG).show();
+                                                if(imageViewDest.getVisibility()==View.GONE) {
+                                                    imageViewDest.setVisibility(View.VISIBLE);
+                                                }
                                                 imageViewDest.setImageBitmap(merged);
                                             }
                                         }
