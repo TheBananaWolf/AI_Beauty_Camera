@@ -58,9 +58,9 @@ import java.util.Objects;
 public class DesignActivity extends AppCompatActivity implements MainToolAdapter.OnToolItemSelected {
     public static final int NEW_IMAGE_REQUEST = 2;
     private static int tempColor = Color.RED, tempAlpha = 80, tempColorProcess = 0;
+    private final List<Bitmap> bitmapList = new ArrayList<>();
     private Uri imageUri;
     private Bitmap newTempBitmap;
-    private final List<Bitmap> bitmapList = new ArrayList<>();
     private InputImage inputImage;
     private ZoomImageView mainImageView;
     private FloatingActionButton btnFaceDetect;

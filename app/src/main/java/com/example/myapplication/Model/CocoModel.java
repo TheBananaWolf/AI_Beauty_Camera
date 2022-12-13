@@ -39,14 +39,14 @@ public class CocoModel {
     private final static int COLOR_CHANNELS = 3;
     private final static int BYTES_PER_POINT = 4;
     private final static Random RANDOM = new Random(System.currentTimeMillis());
-    private Bitmap backgroud;
     private final Activity activity;
+    private final ImageProcess imageProcess;
+    private Bitmap backgroud;
     private ByteBuffer mImageData;
     private ByteBuffer mOutputs;
     private MappedByteBuffer modelFile;
     private int[][] mSegmentBits;
     private int[] mSegmentColors;
-    private final ImageProcess imageProcess;
     private String OpenCVFunctionName;
     private CocoModel.ProgressCallback callback;
 

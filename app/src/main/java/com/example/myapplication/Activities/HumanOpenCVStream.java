@@ -76,14 +76,14 @@ public class HumanOpenCVStream extends AppCompatActivity {
         ORIENTATIONS.append(Surface.ROTATION_270, 270);
     }
 
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final String opt = "";
     CameraManager cManager;
     String cameraId;
     private CardView pickImageBtn, swipCamera;
     private PreviewView cameraPreviewView;
     private RelativeLayout rootLayout;
-    private final Executor executor = Executors.newSingleThreadExecutor();
     private Camera camera;
-    private final String opt = "";
     private com.example.myapplication.Model.CocoModelForCamera CocoModelForCamera;
     private Bitmap background;
     private ImageView imageView3;

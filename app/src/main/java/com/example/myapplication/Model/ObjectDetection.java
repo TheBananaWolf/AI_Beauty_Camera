@@ -35,8 +35,6 @@ public class ObjectDetection {
     private static final float IMAGE_STD = 128.0f;//标准化
     private final String TAG = "ObjectDetection";
     private final int[] ddims = {1, 3, 300, 300};//根据自己的实际情况修改
-    private Interpreter tflite;
-    private List<String> labelList;
     private final float[][][] outputLocations = new float[1][NUM_DETECTIONS][4];//默认保留的前10个检测到的物体的坐标;
     private final float[][] outputClasses = new float[1][NUM_DETECTIONS];//10个目标属于的类别;
     private final float[][] outputScores = new float[1][NUM_DETECTIONS];//10个目标的概率值;
@@ -50,6 +48,8 @@ public class ObjectDetection {
             put(3, numDetections);
         }
     };
+    private Interpreter tflite;
+    private List<String> labelList;
     private Recognition[] recognitions = null;
 
     //-------------------------------------------加载目标检测模型-----------------------------------------

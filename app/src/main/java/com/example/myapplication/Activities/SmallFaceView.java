@@ -23,6 +23,16 @@ import android.view.View;
  */
 public class SmallFaceView extends View {
 
+    //将图像分成多少格
+    private final int WIDTH = 200;
+    private final int HEIGHT = 200;
+    //交点坐标的个数
+    private final int COUNT = (WIDTH + 1) * (HEIGHT + 1);
+    //用于保存COUNT的坐标
+    //x0, y0, x1, y1......
+    private final float[] verts = new float[COUNT * 2];
+    //用于保存原始的坐标
+    private final float[] orig = new float[COUNT * 2];
     boolean isSmllBody = false;
     boolean isShowOrigin = false;
     private int mWidth, mHeight;//View 的宽高
@@ -38,16 +48,6 @@ public class SmallFaceView extends View {
     private boolean showDirection;
     //变形起始坐标,滑动坐标
     private float startX, startY, moveX, moveY;
-    //将图像分成多少格
-    private final int WIDTH = 200;
-    private final int HEIGHT = 200;
-    //交点坐标的个数
-    private final int COUNT = (WIDTH + 1) * (HEIGHT + 1);
-    //用于保存COUNT的坐标
-    //x0, y0, x1, y1......
-    private final float[] verts = new float[COUNT * 2];
-    //用于保存原始的坐标
-    private final float[] orig = new float[COUNT * 2];
     private Bitmap mBitmap;
     private boolean isEnableOperate = true;
     private float mScale = 1.0f;

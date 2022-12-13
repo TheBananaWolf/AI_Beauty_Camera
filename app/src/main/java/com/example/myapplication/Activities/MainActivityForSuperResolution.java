@@ -38,6 +38,7 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
     private static final String TAG = "FANG";
     private static final Random random = new Random();
     final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SuperResolution" + File.separator;
+    private final String[] testImages = {"0829x4-crop.png", "0851x4-crop.png", "0869x4-crop.png", "1.png", "2.png"};
     private Button testButton;
     private Button selectButton;
     private Button saveButton;
@@ -47,7 +48,6 @@ public class MainActivityForSuperResolution extends AppCompatActivity {
     private Activity activity;
     private SRGanModel srGanModel;
     private Bitmap mergeBitmap;
-    private final String[] testImages = {"0829x4-crop.png", "0851x4-crop.png", "0869x4-crop.png", "1.png", "2.png"};
     private Handler handler;
     private HandlerThread handlerThread;
 

@@ -47,8 +47,9 @@ public class imageProcessing extends AppCompatActivity {
     private static final String MODEL_FILE = "lite-model_deeplabv3_1_metadata_2.tflite";
     private static Bitmap image;
     final String SR_ROOT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ImageProcess" + File.separator;
-    public SmallFaceActivity SmallFaceActivity;
     private final List<ListForRecyclerViewForImage> listForRecyclerViewForImageList = new ArrayList<>();
+    private final String TAG = "com.example.myapplication : imageProcessing";
+    public SmallFaceActivity SmallFaceActivity;
     private Activity activity;
     private SRGanModel srGanModel;
     private CocoModel CocoModel;
@@ -64,7 +65,7 @@ public class imageProcessing extends AppCompatActivity {
     private Button choose;
     private Uri path;
     private RecyclerView recyclerView;
-    private final String TAG = "com.example.myapplication : imageProcessing";
+    private RecyclerTouchListener recyclerTouchListener;
 
     public static Bitmap getSRC() {
         return image;
@@ -83,14 +84,11 @@ public class imageProcessing extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview_for_opencv_picture);
-
         if (!hasPermission()) {
             requestPermission();
         }
-
         imageViewSrc = findViewById(R.id.imageview_src);
         imageViewDest = findViewById(R.id.imageview_dest);
         imageViewSrc.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -100,13 +98,10 @@ public class imageProcessing extends AppCompatActivity {
         choose = findViewById(R.id.ChooseImage);
         background = findViewById(R.id.ChooseBackground);
         save = findViewById(R.id.Save);
-
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-
-
     }
 
     @Override
@@ -116,14 +111,12 @@ public class imageProcessing extends AppCompatActivity {
         srGanModel = new SRGanModel(activity);
         CocoModel = new CocoModel(activity);
         SmallFaceActivity = new SmallFaceActivity();
-
         srGanModel.loadModel(SRGAN_MODEL_FILE);
         try {
             CocoModel.initialize(MODEL_FILE);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         handlerThread = new HandlerThread("inference");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
@@ -144,6 +137,7 @@ public class imageProcessing extends AppCompatActivity {
         initRecyclerView();
         AdapterForRecycle adapter = new AdapterForRecycle(listForRecyclerViewForImageList);
         recyclerView.setAdapter(adapter);
+        initRecyclerTouchListener();
     }
 
     @Override
@@ -181,145 +175,11 @@ public class imageProcessing extends AppCompatActivity {
             }
         });
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                ListForRecyclerViewForImage listForRecyclerViewForImage = listForRecyclerViewForImageList.get(position);
-                if (progressBar.getProgress() == 100) {
-                    progressBar.setProgress(0);
-                }
-
-                if (image == null) {
-                    Toast.makeText(imageProcessing.this, "Choose the input image first !!!!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (listForRecyclerViewForImage.getName().equals("SuperResolution")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            setProcessImage(0);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Gray")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Gray");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Sketch")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Sketch");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Binarization")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Binarization");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Cutout")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Diffuse");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Contour")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Contour");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Nostalgic")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Nostalgic");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Comic_strip")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Comic_strip");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("FaceBeauty")) {
-                    Intent temp = new Intent(imageProcessing.this, DesignActivity.class);
-                    temp.putExtra("imageUri", imagePath);
-                    temp.putExtra("opt", "");
-                    startActivity(temp);
-                } else if (listForRecyclerViewForImage.getName().equals("Diffuse")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Diffuse");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Cast")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Cast");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Iced")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Iced");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Relief")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("Relief");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Pinch_face")) {
-                    Intent temp = new Intent(imageProcessing.this, SmallFaceActivity.class);
-                    temp.putExtra("imageUri", imagePath);
-                    startActivity(temp);
-                } else if (listForRecyclerViewForImage.getName().equals("BigEye")) {
-                    runInBackground(new Runnable() {
-                        @Override
-                        public void run() {
-                            CocoModel.setOpenCVFunctionName("BigEye");
-                            setProcessImage(1);
-                        }
-                    });
-                } else if (listForRecyclerViewForImage.getName().equals("Stiker")) {
-                    Intent temp = new Intent(imageProcessing.this, MainActivityForSticker.class);
-                    startActivity(temp);
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                Toast.makeText(imageProcessing.this, "Chose the desired function", Toast.LENGTH_SHORT).show();
-            }
-        }));
+        recyclerView.addOnItemTouchListener(recyclerTouchListener);
     }
+
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         image.recycle();
         merged.recycle();
@@ -461,6 +321,145 @@ public class imageProcessing extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    private void initRecyclerTouchListener() {
+        recyclerTouchListener = new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ListForRecyclerViewForImage listForRecyclerViewForImage = listForRecyclerViewForImageList.get(position);
+                if (progressBar.getProgress() == 100) {
+                    progressBar.setProgress(0);
+                }
+
+                if (image == null) {
+                    Toast.makeText(imageProcessing.this, "Choose the input image first !!!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (listForRecyclerViewForImage.getName().equals("SuperResolution")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            setProcessImage(0);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Gray")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Gray");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Sketch")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Sketch");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Binarization")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Binarization");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Cutout")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Diffuse");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Contour")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Contour");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Nostalgic")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Nostalgic");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Comic_strip")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Comic_strip");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("FaceBeauty")) {
+                    Intent temp = new Intent(imageProcessing.this, DesignActivity.class);
+                    temp.putExtra("imageUri", imagePath);
+                    temp.putExtra("opt", "");
+                    startActivity(temp);
+                } else if (listForRecyclerViewForImage.getName().equals("Diffuse")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Diffuse");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Cast")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Cast");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Iced")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Iced");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Relief")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("Relief");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Pinch_face")) {
+                    Intent temp = new Intent(imageProcessing.this, SmallFaceActivity.class);
+                    temp.putExtra("imageUri", imagePath);
+                    startActivity(temp);
+                } else if (listForRecyclerViewForImage.getName().equals("BigEye")) {
+                    runInBackground(new Runnable() {
+                        @Override
+                        public void run() {
+                            CocoModel.setOpenCVFunctionName("BigEye");
+                            setProcessImage(1);
+                        }
+                    });
+                } else if (listForRecyclerViewForImage.getName().equals("Stiker")) {
+                    Intent temp = new Intent(imageProcessing.this, MainActivityForSticker.class);
+                    startActivity(temp);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                Toast.makeText(imageProcessing.this, "Chose the desired function", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void requestPermission() {

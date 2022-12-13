@@ -40,10 +40,10 @@ public class StickerView extends View {
     private static final int CP_NONE = -1;
     private static final int CP_REMOVE = 0;
     private static final int CP_ROTATE_SCALE = 2;
-    public OnSelectedListener mOnSelectedListener = null;
-    public OnRemovedListener mOnRemovedListener = null;
     private final Context context;
     private final String imgPath;
+    public OnSelectedListener mOnSelectedListener = null;
+    public OnRemovedListener mOnRemovedListener = null;
     private Bitmap mainBmp, deleteBmp, controlBmp;
     private int mainBmpWidth, mainBmpHeight, deleteBmpWidth, deleteBmpHeight, controlBmpWidth, controlBmpHeight;
     private float[] srcPs, dstPs;

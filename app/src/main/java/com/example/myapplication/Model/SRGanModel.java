@@ -26,13 +26,13 @@ import java.util.ArrayList;
 public class SRGanModel {
     private static final String TAG = "FANG";
     private final Paint boxPaint = new Paint();
+    private final Activity activity;
+    private final int cropBitmapSize = 24;
     private Interpreter tfLite;  //Interpreter主要用于加载模型和执行推理(转发)操作, load the model and perform inference (forward) operations
     private TensorImage inputImageBuffer;  //TensorImage用于向模型传输输入数据
     private TensorBuffer outputProbabilityBuffer;  //TensorBuffer用于获取模型输出数据
-    private final Activity activity;
     private GpuDelegate gpuDelegate;
     private int scale = 4;
-    private final int cropBitmapSize = 24;
     private SRProgressCallback callback;
 
     public SRGanModel(Activity activity) {
