@@ -181,8 +181,12 @@ public class imageProcessing extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        image.recycle();
-        merged.recycle();
+        if (image !=null ){
+            image.recycle();
+        }
+        if( merged != null){
+           merged.recycle();
+        }
         handlerThread.quitSafely();
         handler.removeCallbacksAndMessages(null);
     }
