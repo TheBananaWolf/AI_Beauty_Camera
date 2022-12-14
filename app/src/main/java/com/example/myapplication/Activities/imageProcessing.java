@@ -134,10 +134,8 @@ public class imageProcessing extends AppCompatActivity {
             }
         });
 
-        initRecyclerView();
-        AdapterForRecycle adapter = new AdapterForRecycle(listForRecyclerViewForImageList);
-        recyclerView.setAdapter(adapter);
-        initRecyclerTouchListener();
+            initRecyclerView();
+
     }
 
     @Override
@@ -174,8 +172,12 @@ public class imageProcessing extends AppCompatActivity {
                 }
             }
         });
-
-        recyclerView.addOnItemTouchListener(recyclerTouchListener);
+        if(recyclerTouchListener == null) {
+            AdapterForRecycle adapter = new AdapterForRecycle(listForRecyclerViewForImageList);
+            recyclerView.setAdapter(adapter);
+            initRecyclerTouchListener();
+            recyclerView.addOnItemTouchListener(recyclerTouchListener);
+        }
     }
 
     @Override
@@ -194,43 +196,6 @@ public class imageProcessing extends AppCompatActivity {
     private synchronized void runInBackground(final Runnable r) {
         if (handler != null) {
             handler.post(r);
-        }
-    }
-
-    private void initRecyclerView() {
-        for (int i = 0; i < 1; i++) {
-            ListForRecyclerViewForImage SuperResolution = new ListForRecyclerViewForImage("SuperResolution", R.drawable.superresultion);
-            listForRecyclerViewForImageList.add(SuperResolution);
-            // the back behaviour work not as designed
-/*            ListForRecyclerViewForImage FaceBeauty = new ListForRecyclerViewForImage("FaceBeauty", R.drawable.facebeauty);
-            listForRecyclerViewForImageList.add(FaceBeauty);
-            ListForRecyclerViewForImage Pinch_face = new ListForRecyclerViewForImage("Pinch_face", R.drawable.neilian);
-            listForRecyclerViewForImageList.add(Pinch_face);*/
-            ListForRecyclerViewForImage Grey = new ListForRecyclerViewForImage("Gray", R.drawable.grey);
-            listForRecyclerViewForImageList.add(Grey);
-            ListForRecyclerViewForImage Detect = new ListForRecyclerViewForImage("Sketch", R.drawable.detect);
-            listForRecyclerViewForImageList.add(Detect);
-            ListForRecyclerViewForImage Binarization = new ListForRecyclerViewForImage("Binarization", R.drawable.binarization);
-            listForRecyclerViewForImageList.add(Binarization);
-            ListForRecyclerViewForImage Contour = new ListForRecyclerViewForImage("Contour", R.drawable.countor);
-            listForRecyclerViewForImageList.add(Contour);
-            ListForRecyclerViewForImage Nostalgic = new ListForRecyclerViewForImage("Nostalgic", R.drawable.nostalgic);
-            listForRecyclerViewForImageList.add(Nostalgic);
-            ListForRecyclerViewForImage Comic_strip = new ListForRecyclerViewForImage("Comic_strip", R.drawable.comic_strip);
-            listForRecyclerViewForImageList.add(Comic_strip);
-            ListForRecyclerViewForImage Cutout = new ListForRecyclerViewForImage("Cutout", R.drawable.diffuse);
-            listForRecyclerViewForImageList.add(Cutout);
-            ListForRecyclerViewForImage Cast = new ListForRecyclerViewForImage("Cast", R.drawable.cast);
-            listForRecyclerViewForImageList.add(Cast);
-            ListForRecyclerViewForImage Iced = new ListForRecyclerViewForImage("Iced", R.drawable.iced);
-            listForRecyclerViewForImageList.add(Iced);
-            ListForRecyclerViewForImage Relief = new ListForRecyclerViewForImage("Relief", R.drawable.relief);
-            listForRecyclerViewForImageList.add(Relief);
-            ListForRecyclerViewForImage BigEye = new ListForRecyclerViewForImage("BigEye", R.drawable.bigeye);
-            listForRecyclerViewForImageList.add(BigEye);
-            ListForRecyclerViewForImage Stiker = new ListForRecyclerViewForImage("Stiker", R.drawable.superresultion);
-            listForRecyclerViewForImageList.add(Stiker);
-
         }
     }
 
@@ -327,10 +292,23 @@ public class imageProcessing extends AppCompatActivity {
         }
     }
 
+    private void requestPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(
+                            imageProcessing.this,
+                            "Write external storage permission is required for this demo",
+                            Toast.LENGTH_LONG)
+                    .show();
+        }
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+    }
+
     private void initRecyclerTouchListener() {
+        Log.i(TAG,"initRecyclerTouchListener");
         recyclerTouchListener = new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
+                Log.i(TAG, "click");
                 ListForRecyclerViewForImage listForRecyclerViewForImage = listForRecyclerViewForImageList.get(position);
                 if (progressBar.getProgress() == 100) {
                     progressBar.setProgress(0);
@@ -465,18 +443,42 @@ public class imageProcessing extends AppCompatActivity {
             }
         });
     }
+    private void initRecyclerView() {
+        for (int i = 0; i < 1; i++) {
+            ListForRecyclerViewForImage SuperResolution = new ListForRecyclerViewForImage("SuperResolution", R.drawable.superresultion);
+            listForRecyclerViewForImageList.add(SuperResolution);
+            // the back behaviour work not as designed
+/*            ListForRecyclerViewForImage FaceBeauty = new ListForRecyclerViewForImage("FaceBeauty", R.drawable.facebeauty);
+            listForRecyclerViewForImageList.add(FaceBeauty);
+            ListForRecyclerViewForImage Pinch_face = new ListForRecyclerViewForImage("Pinch_face", R.drawable.neilian);
+            listForRecyclerViewForImageList.add(Pinch_face);*/
+            ListForRecyclerViewForImage Grey = new ListForRecyclerViewForImage("Gray", R.drawable.grey);
+            listForRecyclerViewForImageList.add(Grey);
+            ListForRecyclerViewForImage Detect = new ListForRecyclerViewForImage("Sketch", R.drawable.detect);
+            listForRecyclerViewForImageList.add(Detect);
+            ListForRecyclerViewForImage Binarization = new ListForRecyclerViewForImage("Binarization", R.drawable.binarization);
+            listForRecyclerViewForImageList.add(Binarization);
+            ListForRecyclerViewForImage Contour = new ListForRecyclerViewForImage("Contour", R.drawable.countor);
+            listForRecyclerViewForImageList.add(Contour);
+            ListForRecyclerViewForImage Nostalgic = new ListForRecyclerViewForImage("Nostalgic", R.drawable.nostalgic);
+            listForRecyclerViewForImageList.add(Nostalgic);
+            ListForRecyclerViewForImage Comic_strip = new ListForRecyclerViewForImage("Comic_strip", R.drawable.comic_strip);
+            listForRecyclerViewForImageList.add(Comic_strip);
+            ListForRecyclerViewForImage Cutout = new ListForRecyclerViewForImage("Cutout", R.drawable.diffuse);
+            listForRecyclerViewForImageList.add(Cutout);
+            ListForRecyclerViewForImage Cast = new ListForRecyclerViewForImage("Cast", R.drawable.cast);
+            listForRecyclerViewForImageList.add(Cast);
+            ListForRecyclerViewForImage Iced = new ListForRecyclerViewForImage("Iced", R.drawable.iced);
+            listForRecyclerViewForImageList.add(Iced);
+            ListForRecyclerViewForImage Relief = new ListForRecyclerViewForImage("Relief", R.drawable.relief);
+            listForRecyclerViewForImageList.add(Relief);
+            ListForRecyclerViewForImage BigEye = new ListForRecyclerViewForImage("BigEye", R.drawable.bigeye);
+            listForRecyclerViewForImageList.add(BigEye);
+            ListForRecyclerViewForImage Stiker = new ListForRecyclerViewForImage("Stiker", R.drawable.superresultion);
+            listForRecyclerViewForImageList.add(Stiker);
 
-    private void requestPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(
-                            imageProcessing.this,
-                            "Write external storage permission is required for this demo",
-                            Toast.LENGTH_LONG)
-                    .show();
         }
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
-
     public void setProcessImage(int JID) {
         if (JID == 0) {
             merged = srGanModel.inference(image);
@@ -498,5 +500,6 @@ public class imageProcessing extends AppCompatActivity {
                         }
                     }
                 });
+        Log.i(TAG,"Process done");
     }
 }
